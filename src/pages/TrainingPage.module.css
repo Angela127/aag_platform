@@ -1,0 +1,165 @@
+/* TrainingPage.module.css */
+
+.page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 28px 24px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── Page Header ─────────────────────────────────────────────── */
+.pageHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.headerIcon {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, var(--aag-primary), var(--aag-primary-dark));
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(135,1,5,.25);
+  flex-shrink: 0;
+}
+
+.pageTitle {
+  font-size: 1.625rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.pageSub {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* ── CPD Pill ─────────────────────────────────────────────────── */
+.headerRight {}
+
+.cpdPill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.cpdPillNums {
+  font-variant-numeric: tabular-nums;
+}
+
+.cpdPillNums strong {
+  color: var(--aag-primary);
+  font-size: 1rem;
+}
+
+.cpdPillBar {
+  width: 72px;
+  height: 6px;
+  background: var(--border-light);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.cpdPillFill {
+  height: 100%;
+  background: var(--aag-primary);
+  border-radius: 999px;
+  transition: width 0.8s var(--ease);
+}
+
+.cpdPillLabel {
+  font-weight: 700;
+  color: var(--aag-primary);
+  font-size: 0.8125rem;
+}
+
+/* ── Tab Nav ─────────────────────────────────────────────────── */
+.tabNav {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  border-bottom: none;
+  overflow: hidden;
+}
+
+.tabScroll {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0 4px;
+}
+
+.tabScroll::-webkit-scrollbar { display: none; }
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 14px 18px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+  transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
+              background var(--dur-fast) var(--ease);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.tab:hover {
+  color: var(--text-primary);
+  background: var(--surface);
+}
+
+.tabActive {
+  color: var(--aag-primary);
+  border-bottom-color: var(--aag-primary);
+  font-weight: 600;
+}
+
+.tabIcon {
+  flex-shrink: 0;
+}
+
+/* ── Tab Content ─────────────────────────────────────────────── */
+.tabContent {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  padding: 24px;
+  animation: fadeIn var(--dur-base) var(--ease) both;
+}
+
+@media (max-width: 768px) {
+  .page { padding: 16px 12px 40px; }
+  .tabContent { padding: 16px; }
+  .tab { padding: 12px 14px; font-size: 0.8125rem; }
+}

@@ -1,0 +1,284 @@
+/* CPDDashboard.module.css */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Top Grid ─────────────────────────────────────────────────── */
+.topGrid {
+  display: grid;
+  grid-template-columns: 260px 1fr 340px;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .topGrid { grid-template-columns: 1fr 1fr; }
+  .alertCard { grid-column: 1 / -1; }
+}
+
+@media (max-width: 768px) {
+  .topGrid { grid-template-columns: 1fr; }
+}
+
+/* ── Donut Ring Card ──────────────────────────────────────────── */
+.ringCard {}
+
+.ringBody {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.ringWrapper {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.ringSvg {
+  transform: none;
+}
+
+.ringArc {
+  transition: stroke-dashoffset 1.2s cubic-bezier(.4, 0, .2, 1);
+}
+
+.ringCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.ringEarned {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--aag-primary);
+  line-height: 1;
+}
+
+.ringLabel {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.ringPct {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.ringStats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.statPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.ringNote {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.ringNote strong {
+  color: var(--text-primary);
+}
+
+/* ── Category Bars ─────────────────────────────────────────────── */
+.catCard {}
+
+.catList {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.catRow {}
+
+.catHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+
+.catLabel {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.catHours {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.catTrack {
+  height: 10px;
+  background: var(--border-light);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.catFill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 1s cubic-bezier(.4, 0, .2, 1);
+}
+
+.catLegend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.legendDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── Expiry Alerts ─────────────────────────────────────────────── */
+.alertCard {}
+
+.alertList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.alert {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid;
+  border-radius: var(--radius-md);
+}
+
+.alertBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.alertTitle {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.alertSub {
+  display: block;
+  font-size: 0.78125rem;
+  color: var(--text-secondary);
+}
+
+.renewBtn {
+  flex-shrink: 0;
+  background: var(--aag-primary);
+  color: white;
+  border: none;
+  white-space: nowrap;
+}
+
+.renewBtn:hover {
+  background: var(--aag-primary-dark);
+}
+
+/* ── Activity Log ──────────────────────────────────────────────── */
+.logCard {}
+
+.logTotal {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--success);
+}
+
+.logTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.logTable thead th {
+  padding: 10px 20px;
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.logRow {
+  border-bottom: 1px solid var(--border-light);
+  transition: background var(--dur-fast) var(--ease);
+}
+
+.logRow:last-child {
+  border-bottom: none;
+}
+
+.logRow:hover {
+  background: var(--surface);
+}
+
+.logRow td {
+  padding: 13px 20px;
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+.logTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.logDate {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+.logHrs {
+  font-weight: 700;
+  color: var(--success);
+  font-size: 0.9375rem;
+}
