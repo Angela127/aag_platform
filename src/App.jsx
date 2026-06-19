@@ -30,14 +30,17 @@ function LoadingSpinner() {
   );
 }
 
+import ChatWidget from './components/chat/ChatWidget.jsx';
+
 function AppLayout({ children }) {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   return (
     <>
       <Navbar />
       <main className="page-container">
         {children}
       </main>
+      {user && (role === 'agent' || role === 'customer') && <ChatWidget />}
     </>
   );
 }
