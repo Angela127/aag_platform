@@ -1,0 +1,196 @@
+/* QuizList.module.css */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ── Stats Row ───────────────────────────────────────────────── */
+.statsRow {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.statCard {
+  flex: 1;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.statNum {
+  font-size: 1.375rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.statLbl {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ── Filters ─────────────────────────────────────────────────── */
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filterPill {
+  padding: 6px 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: white;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--dur-fast) var(--ease);
+}
+
+.filterPill:hover {
+  border-color: var(--aag-primary);
+  color: var(--aag-primary);
+}
+
+.filterActive {
+  background: var(--aag-primary);
+  border-color: var(--aag-primary);
+  color: white;
+}
+
+.filterActive:hover {
+  background: var(--aag-primary-dark);
+  color: white;
+}
+
+/* ── Grid ────────────────────────────────────────────────────── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* ── Quiz Card ───────────────────────────────────────────────── */
+.quizCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 18px;
+  transition: box-shadow var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+}
+
+.quizCard:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.cardDone {
+  border-color: #86efac;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cardIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cardBadges {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.doneBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--success);
+  background: #edf7f2;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.cardTitle {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.cardDesc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  flex: 1;
+}
+
+.cardMeta {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.cardMeta span {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+/* ── Score Bar ───────────────────────────────────────────────── */
+.scoreBar {
+  position: relative;
+  height: 8px;
+  background: var(--border-light);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.scoreBarFill {
+  height: 100%;
+  background: var(--success);
+  border-radius: 999px;
+  transition: width 0.8s var(--ease);
+}
+
+.scoreBarLabel {
+  position: absolute;
+  right: 0;
+  top: -18px;
+  font-size: 0.71875rem;
+  color: var(--success);
+  font-weight: 600;
+}
+
+/* ── Card Footer ─────────────────────────────────────────────── */
+.cardFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 4px;
+}

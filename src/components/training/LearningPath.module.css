@@ -1,0 +1,283 @@
+/* LearningPath.module.css */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ── AI Banner ────────────────────────────────────────────────── */
+.aiBanner {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px 24px;
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+  border: 1px solid #fcd34d;
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.aiBanner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent 60%, rgba(251, 191, 36, 0.1));
+  pointer-events: none;
+}
+
+.aiIcon {
+  width: 44px;
+  height: 44px;
+  background: white;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-sm);
+  flex-shrink: 0;
+}
+
+.aiBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.aiTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+
+.aiTitle span:first-child {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #92400e;
+}
+
+.aiScore {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8125rem;
+  color: #d97706;
+  font-weight: 500;
+}
+
+.aiText {
+  font-size: 0.875rem;
+  color: #78350f;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+
+.aiPath {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.aiPathItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.aiCourseBtn {
+  background: white;
+  border: 1px solid #fbbf24;
+  color: #92400e;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: inherit;
+  padding: 4px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease);
+}
+
+.aiCourseBtn:hover {
+  background: #fef3c7;
+  border-color: #d97706;
+}
+
+.aiBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  background: #d97706;
+  color: white;
+  border-radius: 999px;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+/* ── Path Header ─────────────────────────────────────────────── */
+.pathHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.pathTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.pathSub {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.pathProgress {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--aag-primary);
+  flex-shrink: 0;
+}
+
+/* ── Roadmap ─────────────────────────────────────────────────── */
+.roadmap {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.nodeWrapper {
+  position: relative;
+  padding-left: 40px;
+}
+
+.connector {
+  position: absolute;
+  left: 19px;
+  top: 48px;
+  width: 2px;
+  bottom: -8px;
+  opacity: 0.35;
+  border-radius: 999px;
+}
+
+.node {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding-bottom: 24px;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.nodeHover {
+  transform: translateX(2px);
+}
+
+.bubble {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: -40px;
+  position: relative;
+  z-index: 1;
+  box-shadow: var(--shadow-sm);
+}
+
+.nodeCard {
+  flex: 1;
+  padding: 16px;
+  transition: box-shadow var(--dur-fast) var(--ease);
+}
+
+.nodeCard:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.lockedCard {
+  opacity: 0.65;
+}
+
+.nodeTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nodeMeta {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.stepNum {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.nodeTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+}
+
+.lockedText {
+  color: var(--text-muted);
+}
+
+.nodeDesc {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 14px;
+  line-height: 1.5;
+}
+
+.nodeFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.nodeTags {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.nodeTag {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  background: var(--surface);
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+}
+
+.lockHint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  font-style: italic;
+}

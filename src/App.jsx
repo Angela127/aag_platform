@@ -6,6 +6,7 @@ import AgentDashboard from './pages/AgentDashboard.jsx';
 import CustomerPortal from './pages/CustomerPortal.jsx';
 import ClientManagement from './pages/ClientManagement.jsx';
 import ClientDetail from './pages/ClientDetail.jsx';
+import TrainingPage from './pages/TrainingPage.jsx';
 
 function ProtectedRoute({ children, allowedRole }) {
   const { user, role, loading } = useAuth();
@@ -75,6 +76,11 @@ function AppRoutes() {
       <Route path="/clients/:id" element={
         <ProtectedRoute allowedRole="agent">
           <AppLayout><ClientDetail /></AppLayout>
+          </ProtectedRoute>
+      } />
+      <Route path="/training" element={
+        <ProtectedRoute allowedRole="agent">
+          <AppLayout><TrainingPage /></AppLayout>
         </ProtectedRoute>
       } />
       <Route path="/customer-portal" element={

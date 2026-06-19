@@ -1,0 +1,420 @@
+/* CertificateBadgeWall.module.css */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ── Stats Bar ───────────────────────────────────────────────── */
+.statsBar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 20px 24px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+}
+
+.statsItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.statsNum {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.statsLbl {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+.statsDivider {
+  width: 1px;
+  height: 36px;
+  background: var(--border);
+}
+
+.progressPill {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.progressTrack {
+  width: 120px;
+  height: 8px;
+  background: var(--border-light);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--aag-primary);
+  border-radius: 999px;
+  transition: width 1s var(--ease);
+}
+
+/* ── Section ─────────────────────────────────────────────────── */
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+/* ── Badge Grid ──────────────────────────────────────────────── */
+.badgeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* ── Badge Card ──────────────────────────────────────────────── */
+.badge {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: box-shadow var(--dur-base) var(--ease), transform var(--dur-base) var(--ease);
+  overflow: hidden;
+}
+
+.badge:hover:not(.badgeLocked) {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+}
+
+.badgeLocked {
+  cursor: default;
+  opacity: 0.7;
+  filter: grayscale(0.6);
+}
+
+/* Hover glow */
+.glow {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  opacity: 0.1;
+  filter: blur(20px);
+  pointer-events: none;
+  transition: opacity var(--dur-base) var(--ease);
+}
+
+/* ── Badge Icon ──────────────────────────────────────────────── */
+.badgeIcon {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.badgeEmoji {
+  font-size: 2rem;
+  line-height: 1;
+  display: block;
+}
+
+.emojiLocked {
+  filter: grayscale(1);
+  opacity: 0.5;
+}
+
+.lockOverlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  border-radius: calc(var(--radius-md) - 2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Badge Info ──────────────────────────────────────────────── */
+.badgeInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.badgeTitle {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: 1.3;
+  margin-bottom: 3px;
+}
+
+.textLocked {
+  color: var(--text-muted);
+}
+
+.badgeIssuer {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.badgeMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.earnedDate {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.78125rem;
+  color: var(--success);
+  font-weight: 500;
+}
+
+.cardActions {
+  display: flex;
+  gap: 4px;
+}
+
+.smallBtn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all var(--dur-fast) var(--ease);
+}
+
+.smallBtn:hover {
+  background: var(--border-light);
+  color: var(--text-primary);
+}
+
+.lockReq {
+  font-size: 0.78125rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* ── Earned pill ─────────────────────────────────────────────── */
+.earnedPill {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  color: white;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  border-radius: 999px;
+}
+
+/* ── Certificate Modal ───────────────────────────────────────── */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+  animation: fadeIn var(--dur-base) var(--ease) both;
+}
+
+.certModal {
+  background: white;
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 560px;
+  box-shadow: var(--shadow-xl);
+  animation: scaleIn var(--dur-base) var(--ease) both;
+  padding: 24px;
+  position: relative;
+}
+
+.modalClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  z-index: 10;
+  transition: all var(--dur-fast) var(--ease);
+}
+
+.modalClose:hover {
+  background: var(--border-light);
+  color: var(--text-primary);
+}
+
+/* ── Certificate Preview ─────────────────────────────────────── */
+.certPreview {
+  position: relative;
+  border: 3px solid;
+  border-radius: var(--radius-lg);
+  padding: 32px 28px;
+  text-align: center;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #fffbf0, #fff9f5);
+  overflow: hidden;
+}
+
+.certBg {
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(135,1,5,.02) 20px, rgba(135,1,5,.02) 40px);
+}
+
+.certContent {
+  position: relative;
+  z-index: 1;
+}
+
+.certLogo {
+  width: 56px;
+  height: 56px;
+  background: var(--aag-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 8px;
+}
+
+.certLogoText {
+  color: white;
+  font-size: 1.125rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+}
+
+.certSubtext {
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.certPresents {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-style: italic;
+  margin-bottom: 6px;
+}
+
+.certName {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+}
+
+.certHas {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.certTitle {
+  font-size: 1.25rem;
+  font-weight: 900;
+  margin-bottom: 12px;
+}
+
+.certBigIcon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.certDate {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-bottom: 20px;
+}
+
+.certSig {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.certSigLine {
+  width: 120px;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 1px;
+}
+
+.certSig p {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Corner decorations */
+.cornerTL, .cornerTR, .cornerBL, .cornerBR {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border: 2px solid;
+}
+
+.cornerTL { top: 10px;  left: 10px;  border-right: none; border-bottom: none; border-radius: 4px 0 0 0; }
+.cornerTR { top: 10px;  right: 10px; border-left: none;  border-bottom: none; border-radius: 0 4px 0 0; }
+.cornerBL { bottom: 10px; left: 10px;  border-right: none; border-top: none; border-radius: 0 0 0 4px; }
+.cornerBR { bottom: 10px; right: 10px; border-left: none;  border-top: none; border-radius: 0 0 4px 0; }
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
