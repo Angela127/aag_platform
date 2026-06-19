@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Users, BellRing, BookOpen, Handshake, TrendingUp, ArrowUpRight } from 'lucide-react';
 import { mockKPIs } from '../../lib/mockData.js';
+import { db } from '../../lib/firebase.js';
+import { collection, getDocs } from 'firebase/firestore';
 import styles from './KPICardRow.module.css';
 
 function useCountUp(target, duration = 1200) {
@@ -72,19 +74,45 @@ function CPDCard() {
 }
 
 export default function KPICardRow() {
+  const [totalClients, setTotalClients] = useState(mockKPIs.totalClients);
+  const [activeFollowups, setActiveFollowups] = useState(mockKPIs.activeFollowups);
+
+  useEffect(() => {
+    async function fetchLiveMetrics() {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'customers'));
+        const docCount = querySnapshot.size;
+        
+        let pendingTasksCount = 0;
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          const followUps = data.followUps || [];
+          const pending = followUps.filter((f) => !f.completed).length;
+          pendingTasksCount += pending;
+        });
+
+        setTotalClients(docCount);
+        setActiveFollowups(pendingTasksCount);
+      } catch (err) {
+        console.error('Error fetching dashboard live metrics:', err);
+      }
+    }
+    fetchLiveMetrics();
+  }, []);
+
   return (
     <div className={styles.row}>
       <KPICard
         icon={Users}
         label="Total Clients"
-        value={mockKPIs.totalClients}
+        value={totalClients}
         accent="#870105"
         change="+3 this month"
       />
       <KPICard
         icon={BellRing}
         label="Active Follow-ups"
-        value={mockKPIs.activeFollowups}
+        value={activeFollowups}
         accent="#d97706"
         change="5 due today"
       />
