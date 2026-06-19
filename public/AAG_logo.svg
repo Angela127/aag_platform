@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" width="240" height="80">
+  <!-- AAG Logo SVG recreation -->
+  <!-- Diamond/shield icon -->
+  <g transform="translate(8, 10)">
+    <!-- Outer diamond -->
+    <polygon points="30,0 50,20 30,40 10,20" fill="none" stroke="white" stroke-width="2.5"/>
+    <!-- Inner diamond -->
+    <polygon points="30,8 42,20 30,32 18,20" fill="white" opacity="0.9"/>
+    <!-- A letter cutout suggestion -->
+    <polygon points="30,10 40,30 35,30 30,20 25,30 20,30" fill="#870105"/>
+  </g>
+  
+  <!-- Text: ADVISORS / ALLIANCE / GROUP -->
+  <text x="68" y="26" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="white">ADVISORS</text>
+  <text x="68" y="42" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="white">ALLIANCE</text>
+  <text x="68" y="58" font-family="Arial, sans-serif" font-size="10" font-weight="700" letter-spacing="2" fill="white">GROUP</text>
+</svg>

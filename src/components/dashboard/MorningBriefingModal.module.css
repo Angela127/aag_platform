@@ -1,0 +1,249 @@
+/* MorningBriefingModal.module.css */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn var(--dur-base) var(--ease) both;
+}
+
+.modal {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  width: 100%;
+  max-width: 580px;
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideUp var(--dur-slow) var(--ease) both;
+}
+
+/* Header */
+.header {
+  padding: 22px 24px 16px;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+.title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.subtitle { font-size: 0.875rem; color: var(--text-muted); }
+.closeBtn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: 1px solid var(--border);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-left: 16px;
+  transition: all var(--dur-fast) var(--ease);
+}
+.closeBtn:hover { background: var(--surface); color: var(--text-primary); }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  padding: 10px 24px 0;
+  gap: 4px;
+  border-bottom: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all var(--dur-fast) var(--ease);
+  white-space: nowrap;
+}
+.tab:hover { color: var(--text-primary); }
+.tabActive {
+  color: var(--aag-primary);
+  border-bottom-color: var(--aag-primary);
+}
+
+/* Body */
+.body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+
+/* Timeline */
+.timeline { display: flex; flex-direction: column; gap: 0; }
+.timelineItem {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  padding-bottom: 20px;
+}
+.timelineItem:last-child { padding-bottom: 0; }
+
+.timelineLeft {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 52px;
+}
+.timeLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 2px solid white;
+  box-shadow: 0 0 0 2px currentColor;
+}
+.dot_review   { color: #6366f1; background: #6366f1; }
+.dot_new      { color: #2563eb; background: #2563eb; }
+.dot_followup { color: #d97706; background: #d97706; }
+
+.connector {
+  width: 2px;
+  flex: 1;
+  background: var(--border);
+  margin-top: 4px;
+  min-height: 24px;
+}
+
+.timelineCard {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+}
+.meetingClient {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.meetingMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.meetingLoc, .meetingDur {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Reminders */
+.reminderList { display: flex; flex-direction: column; gap: 10px; }
+.reminderItem {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: var(--white);
+}
+.urgencyBar {
+  width: 4px;
+  flex-shrink: 0;
+}
+.reminderContent { flex: 1; padding: 12px 14px; }
+.reminderTop {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+.urgencyIcon { display: flex; }
+.reminderClient { font-weight: 600; font-size: 0.9rem; color: var(--text-primary); }
+.reminderMsg { font-size: 0.8125rem; color: var(--text-secondary); }
+
+/* CPD Section */
+.cpdSection { display: flex; flex-direction: column; gap: 16px; }
+.cpdCard {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+.cpdCard h4 { font-size: 0.9375rem; margin-bottom: 14px; color: var(--text-primary); }
+
+.cpdProgress { display: flex; flex-direction: column; gap: 8px; }
+.cpdBar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.cpdFill {
+  height: 100%;
+  background: var(--aag-primary);
+  border-radius: 999px;
+  transition: width .6s var(--ease);
+}
+.cpdLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+.cpdNote { font-size: 0.8125rem; color: var(--text-secondary); }
+
+.partnerCard {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+.partnerHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 8px;
+}
+.partnerCard h3 { font-size: 1.125rem; color: var(--text-primary); margin-bottom: 6px; }
+.partnerRec { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.5; }
+.partnerMeta { margin-top: 10px; font-size: 0.8125rem; color: var(--text-secondary); }
+
+/* Footer */
+.footer {
+  padding: 14px 24px;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-shrink: 0;
+}
