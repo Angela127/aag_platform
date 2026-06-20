@@ -4,7 +4,6 @@ import MorningBriefingModal from '../components/dashboard/MorningBriefingModal.j
 import MeetingSchedule from '../components/dashboard/MeetingSchedule.jsx';
 import SmartReminderPanel from '../components/dashboard/SmartReminderPanel.jsx';
 import KanbanBoard from '../components/dashboard/KanbanBoard.jsx';
-import AdvisorManagement from '../components/dashboard/AdvisorManagement.jsx';
 import SectorNewsDrawer from '../components/dashboard/SectorNewsDrawer.jsx';
 
 import { mockKanban, mockMeetings, mockPipeline } from '../lib/mockData.js';
@@ -18,7 +17,16 @@ export default function AgentDashboard() {
   const [selectedDate, setSelectedDate] = useState('2026-06-20');
   
   // Shared States
-  const [meetings] = useState(mockMeetings);
+  const [meetings, setMeetings] = useState(() => {
+    const saved = localStorage.getItem('aag_meetings');
+    return saved ? JSON.parse(saved) : mockMeetings;
+  });
+
+  const handleAddMeeting = (newMeeting) => {
+    const updated = [newMeeting, ...meetings];
+    setMeetings(updated);
+    localStorage.setItem('aag_meetings', JSON.stringify(updated));
+  };
   const [columns, setColumns] = useState({
     todo:       mockKanban.todo,
     inprogress: mockKanban.inprogress,
@@ -142,6 +150,8 @@ export default function AgentDashboard() {
             selectedDate={selectedDate}
             onSelectDate={setSelectedDate}
             columns={columns}
+            meetings={meetings}
+            onAddMeeting={handleAddMeeting}
           />
         </div>
 
@@ -151,7 +161,6 @@ export default function AgentDashboard() {
         </div>
       </div>
 
-      {role === 'manager' && <AdvisorManagement />}
 
       {/* Task Kanban Board */}
       <div className={styles.kanbanSection}>

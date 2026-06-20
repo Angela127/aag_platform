@@ -14,6 +14,7 @@ const AGENT_LINKS = [
 
 const MANAGER_LINKS = [
   { to: '/dashboard',         label: 'Dashboard',   icon: LayoutDashboard },
+  { to: '/advisors',          label: 'Advisors',    icon: Users },
   { to: '/manager-dashboard', label: 'Message',     icon: LayoutDashboard },
   { to: '/clients',           label: 'Clients',     icon: Users },
   { to: '/training',          label: 'Training',    icon: BookOpen },
@@ -148,20 +149,35 @@ export default function Navbar() {
         </Link>
 
         {/* Center Nav Links */}
-        {user && (
-          <ul className={styles.navLinks}>
-            {(role === 'agent' || role === 'manager') && (role === 'manager' ? MANAGER_LINKS : AGENT_LINKS).map(({ to, label }) => (
-              <li key={to}>
-                <Link
-                  to={to}
-                  className={`${styles.navLink} ${location.pathname === to ? styles.active : ''}`}
-                >
-                  {label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        )}
+        {user && (() => {
+          const isActiveLink = (to) => {
+            const queryParams = new URLSearchParams(location.search);
+            const hasAdvisorId = queryParams.has('advisorId');
+
+            if (to === '/reports') {
+              return location.pathname === '/reports' && !hasAdvisorId;
+            }
+            if (to === '/advisors') {
+              return location.pathname === '/advisors' || (location.pathname === '/reports' && hasAdvisorId);
+            }
+            return location.pathname === to;
+          };
+
+          return (
+            <ul className={styles.navLinks}>
+              {(role === 'agent' || role === 'manager') && (role === 'manager' ? MANAGER_LINKS : AGENT_LINKS).map(({ to, label }) => (
+                <li key={to}>
+                  <Link
+                    to={to}
+                    className={`${styles.navLink} ${isActiveLink(to) ? styles.active : ''}`}
+                  >
+                    {label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          );
+        })()}
 
         {/* Right Side */}
         <div className={styles.rightSide}>
@@ -225,7 +241,7 @@ export default function Navbar() {
                     </div>
                     <ul className={styles.menuList}>
                       <li>
-                        <button className={styles.menuItem}>
+                        <button className={styles.menuItem} onClick={() => { setAvatarOpen(false); navigate('/profile'); }}>
                           <User size={15} /> Profile
                         </button>
                       </li>

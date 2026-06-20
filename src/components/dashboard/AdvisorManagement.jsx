@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { db } from '../../lib/firebase.js';
 import { collection, doc, setDoc, deleteDoc, onSnapshot } from 'firebase/firestore';
-import { Plus, Edit2, Trash2, X, Search, Users } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Search, Users, BarChart3 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import styles from './AdvisorManagement.module.css';
 
 export default function AdvisorManagement() {
+  const navigate = useNavigate();
   const [advisors, setAdvisors] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
@@ -18,6 +20,8 @@ export default function AdvisorManagement() {
     email: '',
     phone: '',
     status: 'active',
+    teamSize: 0,
+    totalClients: 0,
   });
   const [formError, setFormError] = useState('');
 
@@ -45,6 +49,8 @@ export default function AdvisorManagement() {
       email: '',
       phone: '',
       status: 'active',
+      teamSize: 0,
+      totalClients: 0,
     });
     setFormError('');
     setIsModalOpen(true);
@@ -58,6 +64,8 @@ export default function AdvisorManagement() {
       email: advisor.email || '',
       phone: advisor.phone || '',
       status: advisor.status || 'active',
+      teamSize: advisor.teamSize || 0,
+      totalClients: advisor.totalClients || 0,
     });
     setFormError('');
     setIsModalOpen(true);
@@ -77,7 +85,7 @@ export default function AdvisorManagement() {
     e.preventDefault();
     setFormError('');
 
-    const { name, designation, email, phone, status } = formData;
+    const { name, designation, email, phone, status, teamSize, totalClients } = formData;
     if (!name.trim() || !designation.trim() || !email.trim()) {
       setFormError('Please fill in Name, Designation, and Email.');
       return;
@@ -97,8 +105,8 @@ export default function AdvisorManagement() {
         phone,
         status,
         avatar,
-        teamSize: editingAdvisor ? (editingAdvisor.teamSize || 0) : 0,
-        totalClients: editingAdvisor ? (editingAdvisor.totalClients || 0) : 0,
+        teamSize: Number(teamSize) || 0,
+        totalClients: Number(totalClients) || 0,
       };
 
       await setDoc(doc(db, 'advisors', id), advisorDoc);
@@ -166,6 +174,8 @@ export default function AdvisorManagement() {
                 <th className={styles.th}>Advisor</th>
                 <th className={styles.th}>Email</th>
                 <th className={styles.th}>Phone</th>
+                <th className={styles.th}>Team Size</th>
+                <th className={styles.th}>Total Clients</th>
                 <th className={styles.th}>Status</th>
                 <th className={styles.th} style={{ textAlign: 'right' }}>Actions</th>
               </tr>
@@ -188,6 +198,8 @@ export default function AdvisorManagement() {
                   </td>
                   <td className={styles.td}>{advisor.email}</td>
                   <td className={styles.td}>{advisor.phone || '-'}</td>
+                  <td className={styles.td} style={{ fontWeight: 600 }}>{advisor.teamSize ?? 0}</td>
+                  <td className={styles.td} style={{ fontWeight: 600 }}>{advisor.totalClients ?? 0}</td>
                   <td className={styles.td}>
                     <span
                       className={`${styles.statusBadge} ${
@@ -204,6 +216,13 @@ export default function AdvisorManagement() {
                   </td>
                   <td className={styles.td} style={{ textAlign: 'right' }}>
                     <div className={styles.rowActions} style={{ justifyContent: 'flex-end' }}>
+                      <button
+                        className={`${styles.actionBtn} ${styles.reportBtn}`}
+                        onClick={() => navigate(`/reports?advisorId=${advisor.id}`)}
+                        title="View Report"
+                      >
+                        <BarChart3 size={13} />
+                      </button>
                       <button
                         className={`${styles.actionBtn} ${styles.editBtn}`}
                         onClick={() => openEditModal(advisor)}
@@ -305,6 +324,32 @@ export default function AdvisorManagement() {
                       onChange={handleInputChange}
                       className={styles.input}
                       placeholder="e.g. +65 9123 4567"
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label className={styles.label} htmlFor="teamSize">Team Size</label>
+                    <input
+                      type="number"
+                      id="teamSize"
+                      name="teamSize"
+                      value={formData.teamSize}
+                      onChange={handleInputChange}
+                      className={styles.input}
+                      min="0"
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label className={styles.label} htmlFor="totalClients">Total Clients</label>
+                    <input
+                      type="number"
+                      id="totalClients"
+                      name="totalClients"
+                      value={formData.totalClients}
+                      onChange={handleInputChange}
+                      className={styles.input}
+                      min="0"
                     />
                   </div>
 

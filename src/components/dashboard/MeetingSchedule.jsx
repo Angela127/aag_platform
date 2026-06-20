@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight, Clock, Users, ThumbsUp, ListCollapse, Eye, Video, MapPin, Phone } from 'lucide-react';
-import { mockMeetings } from '../../lib/mockData.js';
+import { ChevronLeft, ChevronRight, Clock, Users, ThumbsUp, ListCollapse, Eye, Video, MapPin, Phone, Plus, X } from 'lucide-react';
 import clients from '../../data/clients.js';
 import styles from './MeetingSchedule.module.css';
 
@@ -43,7 +42,7 @@ const getPlatformIcon = (platform) => {
   );
 };
 
-function MiniCalendar({ selectedDate, onSelectDate, columns }) {
+function MiniCalendar({ selectedDate, onSelectDate, columns, meetings }) {
   const [cursor, setCursor] = useState(() => parseDateKey(selectedDate));
 
   const year = cursor.getFullYear();
@@ -76,12 +75,12 @@ function MiniCalendar({ selectedDate, onSelectDate, columns }) {
           const key = toKey(d);
           
           // Dynamic activity calculation: meetings + Kanban tasks due on this date
-          const meetingsCount = mockMeetings.filter(m => m.date === key).length;
+          const meetingsCount = meetings.filter(m => m.date === key).length;
           const tasksCount = columns
             ? Object.values(columns).flat().filter(t => t.dueDate === key).length
             : 0;
           const count = meetingsCount + tasksCount;
-
+ 
           const isToday = key === todayKey;
           const isSelected = key === selectedDate;
           return (
@@ -100,8 +99,8 @@ function MiniCalendar({ selectedDate, onSelectDate, columns }) {
   );
 }
 
-export default function MeetingSchedule({ selectedDate, onSelectDate, columns }) {
-  const selectedMeetings = mockMeetings.filter(m => m.date === selectedDate);
+export default function MeetingSchedule({ selectedDate, onSelectDate, columns, meetings = [], onAddMeeting }) {
+  const selectedMeetings = meetings.filter(m => m.date === selectedDate);
   const formattedDate = parseDateKey(selectedDate).toLocaleDateString('en-SG', {
     weekday: 'long',
     day: 'numeric',
@@ -110,6 +109,19 @@ export default function MeetingSchedule({ selectedDate, onSelectDate, columns })
 
   const [readyMeetings, setReadyMeetings] = useState({});
   const [expandedNotes, setExpandedNotes] = useState({});
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    title: '',
+    client: '',
+    time: '10:00',
+    endTime: '11:00',
+    platform: 'Google Meet',
+    location: '',
+    description: '',
+    attendees: 2,
+    tags: '',
+    prepNotes: ''
+  });
 
   const handleToggleReady = (id) => {
     setReadyMeetings(prev => ({ ...prev, [id]: !prev[id] }));
@@ -119,15 +131,75 @@ export default function MeetingSchedule({ selectedDate, onSelectDate, columns })
     setExpandedNotes(prev => ({ ...prev, [id]: !prev[id] }));
   };
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const calculateDuration = (start, end) => {
+    try {
+      const [sh, sm] = start.split(':').map(Number);
+      const [eh, em] = end.split(':').map(Number);
+      const mins = (eh * 60 + em) - (sh * 60 + sm);
+      if (mins > 0) {
+        if (mins >= 60) {
+          const hrs = (mins / 60).toFixed(mins % 60 === 0 ? 0 : 1);
+          return `${hrs} hr${hrs === '1' ? '' : 's'}`;
+        }
+        return `${mins} min`;
+      }
+    } catch (e) {}
+    return '30 min';
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    if (!formData.title.trim() || !formData.client.trim()) return;
+
+    const newEvent = {
+      id: `m-${Date.now()}`,
+      date: selectedDate,
+      title: formData.title,
+      client: formData.client,
+      time: formData.time,
+      endTime: formData.endTime,
+      platform: formData.platform === 'Custom' ? formData.location : formData.platform,
+      duration: calculateDuration(formData.time, formData.endTime),
+      attendees: Number(formData.attendees) || 2,
+      description: formData.description || 'No description provided.',
+      tags: formData.tags ? formData.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+      prepNotes: formData.prepNotes || 'Review client history before the session.'
+    };
+
+    onAddMeeting(newEvent);
+    setIsModalOpen(false);
+    setFormData({
+      title: '',
+      client: '',
+      time: '10:00',
+      endTime: '11:00',
+      platform: 'Google Meet',
+      location: '',
+      description: '',
+      attendees: 2,
+      tags: '',
+      prepNotes: ''
+    });
+  };
+
   return (
     <div className={styles.wrap}>
       <div className={styles.sectionHeader}>
         <h3 className={styles.sectionTitle}>Meeting Schedule</h3>
+        <button className={styles.addEventBtn} onClick={() => setIsModalOpen(true)}>
+          <Plus size={14} />
+          <span>Add Event</span>
+        </button>
       </div>
 
       <div className={styles.layout}>
         {/* Mini Calendar */}
-        <MiniCalendar selectedDate={selectedDate} onSelectDate={onSelectDate} columns={columns} />
+        <MiniCalendar selectedDate={selectedDate} onSelectDate={onSelectDate} columns={columns} meetings={meetings} />
 
         {/* Timeline */}
         <div className={styles.timelineWrap}>
@@ -228,6 +300,174 @@ export default function MeetingSchedule({ selectedDate, onSelectDate, columns })
           </div>
         </div>
       </div>
+
+      {/* Add Event Modal */}
+      {isModalOpen && (
+        <div className={styles.modalOverlay} onClick={() => setIsModalOpen(false)}>
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.modalHeader}>
+              <h3 className={styles.modalTitle}>Schedule New Event</h3>
+              <button className={styles.closeBtn} onClick={() => setIsModalOpen(false)}>
+                <X size={18} />
+              </button>
+            </div>
+
+            <form onSubmit={handleFormSubmit}>
+              <div className={styles.modalBody}>
+                <div className={styles.formGrid}>
+                  <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+                    <label className={styles.label} htmlFor="title">Event Title *</label>
+                    <input
+                      type="text"
+                      id="title"
+                      name="title"
+                      value={formData.title}
+                      onChange={handleInputChange}
+                      className={styles.input}
+                      placeholder="e.g. Portfolio Review & Rebalancing"
+                      required
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label className={styles.label} htmlFor="client">Client Name *</label>
+                    <input
+                      type="text"
+                      id="client"
+                      name="client"
+                      value={formData.client}
+                      onChange={handleInputChange}
+                      className={styles.input}
+                      placeholder="e.g. John Tan"
+                      required
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label className={styles.label} htmlFor="attendees">Attendees</label>
+                    <input
+                      type="number"
+                      id="attendees"
+                      name="attendees"
+                      value={formData.attendees}
+                      onChange={handleInputChange}
+                      className={styles.input}
+                      min="1"
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label className={styles.label} htmlFor="time">Start Time *</label>
+                    <input
+                      type="time"
+                      id="time"
+                      name="time"
+                      value={formData.time}
+                      onChange={handleInputChange}
+                      className={styles.input}
+                      required
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label className={styles.label} htmlFor="endTime">End Time *</label>
+                    <input
+                      type="time"
+                      id="endTime"
+                      name="endTime"
+                      value={formData.endTime}
+                      onChange={handleInputChange}
+                      className={styles.input}
+                      required
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label className={styles.label} htmlFor="platform">Platform / Channel *</label>
+                    <select
+                      id="platform"
+                      name="platform"
+                      value={formData.platform}
+                      onChange={handleInputChange}
+                      className={styles.select}
+                      required
+                    >
+                      <option value="Google Meet">Google Meet</option>
+                      <option value="Microsoft Teams">Microsoft Teams</option>
+                      <option value="Phone Call">Phone Call</option>
+                      <option value="Office">Office / In-Person</option>
+                      <option value="Coffee Shop">Coffee Shop</option>
+                      <option value="Custom">Custom Location</option>
+                    </select>
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label className={styles.label} htmlFor="tags">Tags (comma-separated)</label>
+                    <input
+                      type="text"
+                      id="tags"
+                      name="tags"
+                      value={formData.tags}
+                      onChange={handleInputChange}
+                      className={styles.input}
+                      placeholder="e.g. Portfolio, Savings"
+                    />
+                  </div>
+
+                  {formData.platform === 'Custom' && (
+                    <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+                      <label className={styles.label} htmlFor="location">Custom Location *</label>
+                      <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        value={formData.location}
+                        onChange={handleInputChange}
+                        className={styles.input}
+                        placeholder="e.g. Meeting Room 3B"
+                        required
+                      />
+                    </div>
+                  )}
+
+                  <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+                    <label className={styles.label} htmlFor="description">Description</label>
+                    <textarea
+                      id="description"
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      className={styles.textarea}
+                      placeholder="Brief details of the meeting..."
+                    />
+                  </div>
+
+                  <div className={`${styles.formGroup} ${styles.formGroupFull}`}>
+                    <label className={styles.label} htmlFor="prepNotes">Preparation Notes</label>
+                    <textarea
+                      id="prepNotes"
+                      name="prepNotes"
+                      value={formData.prepNotes}
+                      onChange={handleInputChange}
+                      className={styles.textarea}
+                      placeholder="Notes for advisor checklist before meeting..."
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.modalFooter}>
+                <button type="button" className={styles.cancelBtn} onClick={() => setIsModalOpen(false)}>
+                  Cancel
+                </button>
+                <button type="submit" className={styles.submitBtn}>
+                  Schedule Event
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

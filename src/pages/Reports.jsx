@@ -1,4 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { db } from '../lib/firebase.js';
+import { doc, getDoc } from 'firebase/firestore';
+import { ADVISOR_REPORT_OVERRIDES } from '../lib/advisorReportOverrides.js';
 import styles from './Reports.module.css';
 import {
   monthlyRevenue, quarterlyRevenue, yearlyRevenue, productSales,
@@ -492,10 +496,10 @@ function NetworkGraph() {
 }
 
 // ─── AI Executive Summary ─────────────────────────────────────────────────────
-function AISummary({ mode }) {
+function AISummary({ mode, aiSummaryData: localAiSummaryData }) {
   const [collapsed, setCollapsed] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const data = aiSummaryData[mode] || aiSummaryData.monthly;
+  const data = (localAiSummaryData || aiSummaryData)[mode] || (localAiSummaryData || aiSummaryData).monthly;
 
   if (dismissed) return null;
   return (
@@ -558,8 +562,8 @@ function AISummary({ mode }) {
 }
 
 // ─── KPI Cards ────────────────────────────────────────────────────────────────
-function KPICards({ mode }) {
-  const kpis = kpiData[mode] || kpiData.monthly;
+function KPICards({ mode, kpiData: localKpiData }) {
+  const kpis = (localKpiData || kpiData)[mode] || (localKpiData || kpiData).monthly;
   const cards = [
     { ...kpis.totalRevenue, icon: '💰', bg: '#fff5f5', iconColor: '#870105', id: 'revenue' },
     { ...kpis.aum,          icon: '📈', bg: '#eff6ff', iconColor: '#1e40af', id: 'aum'     },
@@ -872,8 +876,9 @@ function ClientHealthMonitor() {
 }
 
 // ─── Team Benchmarking ────────────────────────────────────────────────────────
-function TeamBenchmarking({ mode }) {
-  const { metrics, you, teamAvg, branchAvg, topPerformer, units, ranking, totalAdvisors, percentile, performanceScore } = benchmarkData;
+function TeamBenchmarking({ mode, benchmarkData: localBenchmarkData }) {
+  const dataToUse = localBenchmarkData || benchmarkData;
+  const { metrics, you, teamAvg, branchAvg, topPerformer, units, ranking, totalAdvisors, percentile, performanceScore } = dataToUse;
   const colors = { you: '#065f46', team: '#1e40af', branch: '#b45309', top: '#870105' };
 
   return (
@@ -947,7 +952,7 @@ function TeamBenchmarking({ mode }) {
               </div>
             </div>
             <div style={{ marginTop: 12 }}>
-              <RadarChart data={benchmarkData} />
+              <RadarChart data={dataToUse} />
             </div>
           </div>
         </div>
@@ -1011,6 +1016,31 @@ function AdvisorNetwork() {
 export default function Reports() {
   const [filterMode, setFilterMode] = useState('monthly');
   const [exporting, setExporting] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const queryParams = new URLSearchParams(location.search);
+  const queryAdvisorId = queryParams.get('advisorId');
+
+  const [selectedAdvisor, setSelectedAdvisor] = useState(null);
+
+  useEffect(() => {
+    if (queryAdvisorId) {
+      const fetchAdvisor = async () => {
+        try {
+          const docRef = doc(db, 'advisors', queryAdvisorId);
+          const docSnap = await getDoc(docRef);
+          if (docSnap.exists()) {
+            setSelectedAdvisor(docSnap.data());
+          }
+        } catch (error) {
+          console.error("Error fetching advisor for report:", error);
+        }
+      };
+      fetchAdvisor();
+    } else {
+      setSelectedAdvisor(null);
+    }
+  }, [queryAdvisorId]);
 
   const handleExport = () => {
     setExporting(true);
@@ -1020,15 +1050,32 @@ export default function Reports() {
     }, 300);
   };
 
+  const overrideData = selectedAdvisor && ADVISOR_REPORT_OVERRIDES[queryAdvisorId]
+    ? ADVISOR_REPORT_OVERRIDES[queryAdvisorId]
+    : null;
+
+  const activeKpiData = overrideData ? overrideData.kpiData : kpiData;
+  const activeAiSummaryData = overrideData ? overrideData.aiSummaryData : aiSummaryData;
+  const activeBenchmarkData = overrideData ? overrideData.benchmarkData : benchmarkData;
+
   return (
     <div className={styles.page}>
       {/* ── Page Header ── */}
       <div className={styles.pageHeader}>
         <div>
-          <h1 className={styles.pageTitle}>Advisor Performance Intelligence</h1>
-          <p className={styles.pageSubtitle}>AI-powered analytics · June 2026 · Lim Wei Advisor · AAG Intelligence Engine</p>
+          <h1 className={styles.pageTitle}>
+            {selectedAdvisor ? `${selectedAdvisor.name}'s Performance Intelligence` : 'Advisor Performance Intelligence'}
+          </h1>
+          <p className={styles.pageSubtitle}>
+            AI-powered analytics · June 2026 · {selectedAdvisor ? `${selectedAdvisor.name} (${selectedAdvisor.designation})` : 'Lim Wei Advisor'} · AAG Intelligence Engine
+          </p>
         </div>
         <div className={styles.headerRight}>
+          {queryAdvisorId && (
+            <button className={styles.exportBtn} style={{ background: '#f5f3ff', color: '#5b21b6', border: '1px solid #ddd' }} onClick={() => navigate('/advisors')}>
+              ← Back to Advisors
+            </button>
+          )}
           {/* Filter */}
           <div className={styles.filterBar}>
             {['monthly','yearly'].map(m => (
@@ -1045,10 +1092,10 @@ export default function Reports() {
       </div>
 
       {/* ── AI Executive Summary ── */}
-      <AISummary mode={filterMode} />
+      <AISummary mode={filterMode} aiSummaryData={activeAiSummaryData} />
 
       {/* ── KPI Cards ── */}
-      <KPICards mode={filterMode} />
+      <KPICards mode={filterMode} kpiData={activeKpiData} />
 
       {/* ── Revenue Trend + Product Sales ── */}
       <div className={styles.chartsRow}>
@@ -1066,7 +1113,7 @@ export default function Reports() {
       <ClientHealthMonitor />
 
       {/* ── Team Benchmarking ── */}
-      <TeamBenchmarking mode={filterMode} />
+      <TeamBenchmarking mode={filterMode} benchmarkData={activeBenchmarkData} />
 
       {/* ── Advisor Network Graph ── */}
       <AdvisorNetwork />

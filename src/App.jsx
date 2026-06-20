@@ -11,6 +11,8 @@ import Training from './pages/Training.jsx';
 import Partners from './pages/Partners.jsx';
 import Reports from './pages/Reports.jsx';
 import ManagerDashboard from './pages/ManagerDashboard.jsx';
+import Advisors from './pages/Advisors.jsx';
+import Profile from './pages/Profile.jsx';
 
 function ProtectedRoute({ children, allowedRoles }) {
   const { user, role, loading } = useAuth();
@@ -100,6 +102,16 @@ function AppRoutes() {
       <Route path="/manager-dashboard" element={
         <ProtectedRoute allowedRoles="manager">
           <AppLayout><ManagerDashboard /></AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/advisors" element={
+        <ProtectedRoute allowedRoles="manager">
+          <AppLayout><Advisors /></AppLayout>
+        </ProtectedRoute>
+      } />
+      <Route path="/profile" element={
+        <ProtectedRoute allowedRoles={['agent', 'manager']}>
+          <AppLayout><Profile /></AppLayout>
         </ProtectedRoute>
       } />
       <Route path="*" element={<Navigate to="/" replace />} />

@@ -228,6 +228,12 @@
   background: #fdf2f2;
 }
 
+.reportBtn:hover {
+  border-color: var(--aag-primary);
+  color: var(--aag-primary);
+  background: #fdf2f2;
+}
+
 /* ── Modal Overlay ───────────────────────── */
 .modalOverlay {
   position: fixed;
