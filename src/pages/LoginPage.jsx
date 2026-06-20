@@ -7,7 +7,7 @@ import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [role, setRole]         = useState('agent');
+
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -31,9 +31,8 @@ export default function LoginPage() {
       } else if (lowerEmail === 'advisor@gmail.com') {
         finalRole = 'agent';
       }
-      
-      localStorage.setItem('aag_role', finalRole);
-      navigate(finalRole === 'customer' ? '/customer-portal' : '/dashboard');
+      localStorage.setItem('aag_role', 'agent');
+      navigate('/dashboard');
     } catch (err) {
       const messages = {
         'auth/invalid-credential':    'Incorrect email or password.',
@@ -112,6 +111,10 @@ export default function LoginPage() {
                 ? 'Manage your team of advisors'
                 : 'View your financial portfolio'}
             </p>
+            </div>
+          <div className={styles.formHead}>
+            <h2 className={styles.formTitle}>Advisor Sign In</h2>
+            <p className={styles.formSub}>Access your intelligence dashboard</p>
           </div>
 
           {error && (

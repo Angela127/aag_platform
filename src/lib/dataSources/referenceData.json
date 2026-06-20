@@ -1,0 +1,211 @@
+[
+  {
+    "id": "fpam-cfp-ethics",
+    "category": "comprehensive",
+    "value": "Financial planning professionals under FPAM must adhere to the CFP Code of Ethics and Professional Responsibility. FPAM establishes standards for ethical conduct and professional practice in Malaysia.",
+    "source": "FPAM Code of Ethics",
+    "sourceUrl": "https://fpam.org.my",
+    "lastUpdated": "2026-01-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2026-01-15"
+  },
+  {
+    "id": "sc-planner-licensing",
+    "category": "comprehensive",
+    "value": "Individuals offering financial planning services in Malaysia must hold a Capital Markets Services Representative's License (CMSRL) under the Capital Markets and Services Act 2007, regulated by the Securities Commission.",
+    "source": "Securities Commission Malaysia Licensing Guidelines",
+    "sourceUrl": "https://www.sc.com.my",
+    "lastUpdated": "2025-10-10",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-10-20"
+  },
+  {
+    "id": "bnm-household-debt",
+    "category": "comprehensive",
+    "value": "Malaysia's household debt-to-GDP ratio stood at 84.2% as of late 2024. Debt-service-ratio (DSR) thresholds are carefully monitored by BNM to maintain financial stability.",
+    "source": "BNM Financial Stability Review H2 2024",
+    "sourceUrl": "https://www.bnm.gov.my",
+    "lastUpdated": "2025-04-15",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-04-20"
+  },
+  {
+    "id": "dosm-household-income",
+    "category": "comprehensive",
+    "value": "The median monthly household income in Malaysia was RM6,338 based on the latest HIES. Spending on housing, utilities, and transport constitutes over 45% of average household expenditure.",
+    "source": "DOSM Household Income & Expenditure Survey",
+    "sourceUrl": "https://www.dosm.gov.my",
+    "lastUpdated": "2024-12-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2024-12-10"
+  },
+  {
+    "id": "akpk-debt-benchmark",
+    "category": "comprehensive",
+    "value": "AKPK recommends that a healthy Debt-Service-Ratio (total monthly debt installments divided by net monthly income) should not exceed 30% to 40% of net take-home income.",
+    "source": "AKPK Financial Literacy Guide",
+    "sourceUrl": "https://www.akpk.org.my",
+    "lastUpdated": "2025-06-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-06-05"
+  },
+  {
+    "id": "epf-5year-exhaustion",
+    "category": "retirement",
+    "value": "EPF reports indicate that a significant share of members exhaust their retirement savings within 5 years of full withdrawal at age 55, highlighting the critical need for structured annuities or drawdown plans.",
+    "source": "EPF Pulse / Annual Report",
+    "sourceUrl": "https://www.kwsp.gov.my",
+    "lastUpdated": "2025-08-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-08-15"
+  },
+  {
+    "id": "epf-basic-savings-threshold",
+    "category": "retirement",
+    "value": "The basic savings target set by EPF for members at age 55 is RM240,000. This is calculated to provide a minimum retirement income of RM1,000 per month for 20 years.",
+    "source": "EPF Belanjawanku / Basic Savings Guidelines",
+    "sourceUrl": "https://www.kwsp.gov.my",
+    "lastUpdated": "2025-03-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-03-10"
+  },
+  {
+    "id": "dosm-life-expectancy",
+    "category": "retirement",
+    "value": "Average life expectancy in Malaysia is 72.5 years for males and 77.4 years for females as of 2024 data, implying a retirement duration of 15 to 25 years.",
+    "source": "DOSM Abridged Life Tables 2022-2024",
+    "sourceUrl": "https://www.dosm.gov.my",
+    "lastUpdated": "2024-11-20",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2024-11-30"
+  },
+  {
+    "id": "arb-intestacy-probate",
+    "category": "estate",
+    "value": "If a non-Muslim dies intestate (without a will) in Malaysia, their assets are frozen and distributed according to the strict formulas of the Distribution Act 1958, rather than their personal wishes.",
+    "source": "Amanah Raya Berhad Intestacy Guide",
+    "sourceUrl": "https://www.amanahraya.com.my",
+    "lastUpdated": "2025-09-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-09-10"
+  },
+  {
+    "id": "distribution-act-rules",
+    "category": "estate",
+    "value": "Under the Distribution Act 1958 (amended 1997) for non-Muslims, if a person dies leaving a spouse, children, and parents: Spouse receives 1/4, Children receive 1/2, Parents receive 1/4 of the estate.",
+    "source": "Distribution Act 1958 (Statute)",
+    "sourceUrl": "https://www.agc.gov.my",
+    "lastUpdated": "2025-01-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-01-10"
+  },
+  {
+    "id": "wills-act-validity",
+    "category": "estate",
+    "value": "For a will to be valid under the Wills Act 1959, the testator must be at least 18 (Peninsular Malaysia), write it in writing, sign it in the presence of 2 concurrent witnesses who are not beneficiaries.",
+    "source": "Wills Act 1959 (Section 5)",
+    "sourceUrl": "https://www.agc.gov.my",
+    "lastUpdated": "2025-01-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-01-10"
+  },
+  {
+    "id": "syariah-faraid-rules",
+    "category": "estate",
+    "value": "For Muslims, estate distribution is governed by Syariah Faraid inheritance laws. Up to 1/3 of the estate can be bequeathed via Wasiyah (will) to non-heirs, while 2/3 must follow Faraid allocations.",
+    "source": "Department of Syariah Judiciary Malaysia Guidelines",
+    "sourceUrl": "http://www.esyariah.gov.my",
+    "lastUpdated": "2025-05-15",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-05-20"
+  },
+  {
+    "id": "lhdn-estate-taxation",
+    "category": "estate",
+    "value": "Malaysia does not currently levy estate duty or inheritance tax on deceased estates. However, Real Property Gains Tax (RPGT) may apply to subsequent transfers of property.",
+    "source": "Inland Revenue Board (LHDN) Public Rulings",
+    "sourceUrl": "https://www.hasil.gov.my",
+    "lastUpdated": "2025-07-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-07-15"
+  },
+  {
+    "id": "sc-wholesale-eligibility",
+    "category": "private",
+    "value": "Under SC guidelines, wholesale fund investments are restricted to sophisticated investors, defined as individuals whose net personal assets exceed RM3 million or annual income exceeds RM300,000.",
+    "source": "SC Guidelines on Unlisted Capital Market Products",
+    "sourceUrl": "https://www.sc.com.my",
+    "lastUpdated": "2025-11-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-11-10"
+  },
+  {
+    "id": "lhdn-hnw-tax-facts",
+    "category": "private",
+    "value": "Malaysia operates a single-tier dividend system (dividends are tax-exempt to shareholders) and does not tax individual capital gains on equities, making equities highly tax-efficient for HNW individuals.",
+    "source": "LHDN Individual Tax Guidelines",
+    "sourceUrl": "https://www.hasil.gov.my",
+    "lastUpdated": "2025-12-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-12-10"
+  },
+  {
+    "id": "epf-statutory-contribution",
+    "category": "corporate",
+    "value": "The statutory minimum employer EPF contribution rate in Malaysia is 13% for employees earning RM5,000 or below, and 12% for employees earning above RM5,000.",
+    "source": "Employees Provident Fund Act 1991",
+    "sourceUrl": "https://www.kwsp.gov.my",
+    "lastUpdated": "2025-02-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-02-15"
+  },
+  {
+    "id": "socso-eis-obligation",
+    "category": "corporate",
+    "value": "Employers must contribute to SOCSO (Social Security Organization) and EIS (Employment Insurance System) for statutory employee accident and loss of employment coverage based on wage tables.",
+    "source": "PERKESO Employer Contribution Schedule",
+    "sourceUrl": "https://www.perkeso.gov.my",
+    "lastUpdated": "2025-04-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-04-10"
+  },
+  {
+    "id": "hrd-corp-levy",
+    "category": "corporate",
+    "value": "Employers with 10 or more Malaysian employees are mandated to register with HRD Corp and pay a monthly human resources development levy of 1% of their employees' monthly wages.",
+    "source": "Pembangunan Sumber Manusia Berhad Act 2001",
+    "sourceUrl": "https://hrdcorp.gov.my",
+    "lastUpdated": "2025-03-10",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-03-20"
+  },
+  {
+    "id": "bnm-product-disclosure-guidelines",
+    "category": "corporate",
+    "value": "BNM Guidelines on Product Transparency and Disclosure require financial advisors to provide a Product Disclosure Sheet (PDS) highlighting fees, charges, key benefits, and risk terms clearly before product purchase.",
+    "source": "BNM Insurance and Takaful Market Conduct Guidelines",
+    "sourceUrl": "https://www.bnm.gov.my",
+    "lastUpdated": "2025-06-01",
+    "complianceReviewed": true,
+    "reviewedBy": "Compliance Team",
+    "reviewDate": "2025-06-15"
+  }
+]
