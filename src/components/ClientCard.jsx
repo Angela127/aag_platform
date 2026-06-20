@@ -38,7 +38,7 @@ export default function ClientCard({ client }) {
   const nextFollowUp = client.followUps?.find((f) => !f.completed);
 
   return (
-    <div className="group bg-white rounded-xl border border-gray-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 overflow-hidden animate-fade-in">
+    <div className="group bg-white rounded-xl border border-gray-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 overflow-hidden animate-fade-in flex flex-col h-full">
       {/* Top accent stripe */}
       <div className={`h-1 ${
         client.healthScore === undefined || client.healthScore === null ? 'bg-gray-300' :
@@ -46,9 +46,9 @@ export default function ClientCard({ client }) {
         client.healthScore >= 50 ? 'bg-amber-500' : 'bg-red-500'
       }`} />
 
-      <div className="p-5">
+      <div className="p-5 flex flex-col flex-grow">
         {/* Header: Avatar + Info + Score */}
-        <div className="flex items-start justify-between gap-3 mb-4">
+        <div className="flex items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-3">
             <div className={`${avatarColor} w-11 h-11 rounded-full flex items-center justify-center text-white font-semibold text-sm shrink-0`}>
               {initials}
@@ -64,11 +64,11 @@ export default function ClientCard({ client }) {
           </div>
 
           {/* Health Score Circle */}
-          <div className={`${scoreStyle.bg} rounded-lg px-2.5 py-1.5 text-center min-w-[56px]`}>
+          <div className={`${scoreStyle.bg} rounded-lg px-3 py-2 min-w-[72px] flex flex-col items-center justify-center gap-1 shrink-0`}>
             <p className={`text-lg font-bold ${scoreStyle.text} leading-none`}>
               {client.healthScore !== undefined && client.healthScore !== null ? `${client.healthScore}%` : '--%'}
             </p>
-            <p className={`text-[0.6rem] ${scoreStyle.text} font-medium mt-0.5`}>
+            <p className={`text-[0.6rem] ${scoreStyle.text} font-medium leading-none whitespace-nowrap`}>
               {scoreStyle.label}
             </p>
           </div>
@@ -103,7 +103,7 @@ export default function ClientCard({ client }) {
         <button
           id={`view-profile-${client.id}`}
           onClick={() => navigate(`/clients/${client.id}`)}
-          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium text-aag-primary border border-aag-primary/20 bg-aag-primary/[0.03] hover:bg-aag-primary hover:text-white transition-all duration-200 cursor-pointer"
+          className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-medium text-aag-primary border border-aag-primary/20 bg-aag-primary/[0.03] hover:bg-aag-primary hover:text-white transition-all duration-200 cursor-pointer mt-auto"
         >
           View Profile
           <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
