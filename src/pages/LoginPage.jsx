@@ -7,7 +7,7 @@ import styles from './LoginPage.module.css';
 
 export default function LoginPage() {
   const navigate = useNavigate();
-  const [role, setRole]         = useState('agent');
+
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -21,8 +21,8 @@ export default function LoginPage() {
     setError('');
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      localStorage.setItem('aag_role', role);
-      navigate(role === 'customer' ? '/customer-portal' : '/dashboard');
+      localStorage.setItem('aag_role', 'agent');
+      navigate('/dashboard');
     } catch (err) {
       const messages = {
         'auth/invalid-credential':    'Incorrect email or password.',
@@ -65,33 +65,9 @@ export default function LoginPage() {
       {/* Right — Login Form */}
       <div className={styles.formPanel}>
         <div className={styles.formBox}>
-          {/* Role Toggle */}
-          <div className={styles.roleToggle}>
-            <button
-              type="button"
-              className={`${styles.roleBtn} ${role === 'agent' ? styles.roleBtnActive : ''}`}
-              onClick={() => setRole('agent')}
-            >
-              Advisor
-            </button>
-            <button
-              type="button"
-              className={`${styles.roleBtn} ${role === 'customer' ? styles.roleBtnActive : ''}`}
-              onClick={() => setRole('customer')}
-            >
-              Customer
-            </button>
-          </div>
-
           <div className={styles.formHead}>
-            <h2 className={styles.formTitle}>
-              {role === 'agent' ? 'Advisor Sign In' : 'Customer Sign In'}
-            </h2>
-            <p className={styles.formSub}>
-              {role === 'agent'
-                ? 'Access your intelligence dashboard'
-                : 'View your financial portfolio'}
-            </p>
+            <h2 className={styles.formTitle}>Advisor Sign In</h2>
+            <p className={styles.formSub}>Access your intelligence dashboard</p>
           </div>
 
           {error && (

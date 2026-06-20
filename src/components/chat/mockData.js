@@ -8,6 +8,39 @@ export const initialChats = [
     pinned: true,
     unreadCount: 1,
     lastMessage: "Perfect, thank you! I'm looking for a medium-risk wealth growth plan.",
+    
+    // Customer Registration Information
+    fullName: 'TS Tho',
+    preferredName: 'Tho',
+    gender: 'Male',
+    dob: '1995-08-15',
+    nationality: 'Malaysian',
+    maritalStatus: 'Single',
+    mobileNumber: '+60 12-345 6789',
+    residentialAddress: '123 Jalan Ampang, Kuala Lumpur, Malaysia',
+    
+    employmentStatus: 'Employed',
+    companyName: 'TechCorp Solutions',
+    jobTitle: 'Senior Software Engineer',
+    industry: 'Information Technology',
+    yearsExperience: '7',
+    
+    numDependents: 0,
+    spouseName: '',
+    childrenAges: '',
+    anyFamilyDependent: 'No',
+    
+    annualIncomeRange: 'RM100,001 – RM250,000',
+    estimatedInvestableAssets: 'RM50,000 – RM250,000',
+    existingFinancialAdvisor: 'No',
+    
+    financialGoals: ['Wealth Accumulation', 'Retirement Preparation', 'Investment Growth'],
+    preferredConsultation: 'Online Meeting',
+    preferredLanguage: 'English',
+    preferredCommunicationChannel: 'WhatsApp',
+    
+    consentGiven: true,
+    registrationStatus: 'completed',
     messages: [
       {
         id: 'c1',

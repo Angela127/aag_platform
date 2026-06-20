@@ -45,7 +45,7 @@ function AppLayout({ children }) {
       <main className="page-container">
         {children}
       </main>
-      {user && (role === 'agent' || role === 'customer') && <ChatWidget />}
+      {user && role === 'agent' && <ChatWidget />}
     </>
   );
 }
@@ -56,16 +56,10 @@ function AppRoutes() {
     <Routes>
       <Route
         path="/"
-        element={
-          user
-            ? <Navigate to={role === 'customer' ? '/customer-portal' : '/dashboard'} replace />
-            : <Navigate to="/login" replace />
-        }
+        element={user ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />}
       />
       <Route path="/login" element={
-        user
-          ? <Navigate to={role === 'customer' ? '/customer-portal' : '/dashboard'} replace />
-          : <LoginPage />
+        user ? <Navigate to="/dashboard" replace /> : <LoginPage />
       } />
       <Route path="/dashboard" element={
         <ProtectedRoute allowedRole="agent">
