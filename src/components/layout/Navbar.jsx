@@ -23,6 +23,7 @@ const MANAGER_LINKS = [
 ];
 
 const DEFAULT_AGENT_NOTIFICATIONS = [
+  { id: 'a-notif-4', text: "🎂 Birthday today: Jasmin Lowery (Send a birthday greeting today!)", time: 'Just now', unread: true, type: 'birthday' },
   { id: 'a-notif-1', text: "John Tan's policy expires soon", time: '2h ago', unread: true, type: 'policy' },
   { id: 'a-notif-2', text: 'Sarah Lim not contacted in 45 days', time: '1d ago', unread: true, type: 'client' },
   { id: 'a-notif-3', text: 'New partner deal from Prudential', time: '2d ago', unread: false, type: 'partner' },
@@ -40,7 +41,7 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!role) return;
-    const key = 'aag_agent_notifs';
+    const key = 'aag_agent_notifs_v3';
     
     const loadNotifs = () => {
       const stored = localStorage.getItem(key);
@@ -81,7 +82,7 @@ export default function Navbar() {
   };
 
   const handleMarkAsRead = (id) => {
-    const key = 'aag_agent_notifs';
+    const key = 'aag_agent_notifs_v3';
     const updated = notifications.map(n => n.id === id ? { ...n, unread: false } : n);
     localStorage.setItem(key, JSON.stringify(updated));
     setNotifications(updated);
@@ -89,7 +90,7 @@ export default function Navbar() {
   };
 
   const handleDismiss = (id) => {
-    const key = 'aag_agent_notifs';
+    const key = 'aag_agent_notifs_v3';
     const updated = notifications.filter(n => n.id !== id);
     localStorage.setItem(key, JSON.stringify(updated));
     setNotifications(updated);
@@ -97,7 +98,7 @@ export default function Navbar() {
   };
 
   const handleClearAll = () => {
-    const key = 'aag_agent_notifs';
+    const key = 'aag_agent_notifs_v3';
     localStorage.setItem(key, JSON.stringify([]));
     setNotifications([]);
     window.dispatchEvent(new Event('aag-notifications-updated'));
@@ -205,12 +206,7 @@ export default function Navbar() {
                     </div>
                     
                       <ul className={styles.notifList}>
-                        {notifications.map(n => (
-                          <li key={n.id} className={`${styles.notifItem} ${n.unread ? styles.unread : ''}`}>
-                            <p>{n.text}</p>
-                            <span>{n.time}</span>
-                          </li>
-                        ))}
+                        {notifications.map(n => renderNotifItem(n))}
                         {notifications.length === 0 && (
                           <li className={styles.emptyNotifItem}>No notifications</li>
                         )}
