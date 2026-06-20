@@ -1,20 +1,22 @@
 import { CheckCircle2, AlertTriangle } from 'lucide-react';
 
 function getScoreColor(score) {
+  if (score === undefined || score === null) return { stroke: '#9ca3af', bg: '#f3f4f6', label: 'Pending', textColor: 'text-gray-500' };
   if (score >= 80) return { stroke: '#10b981', bg: '#ecfdf5', label: 'Healthy', textColor: 'text-emerald-700' };
   if (score >= 50) return { stroke: '#f59e0b', bg: '#fffbeb', label: 'Needs Attention', textColor: 'text-amber-700' };
   return { stroke: '#ef4444', bg: '#fef2f2', label: 'High Risk', textColor: 'text-red-700' };
 }
 
 export default function HealthScore({ client }) {
-  const score = client.healthScore || 0;
+  const hasScore = client.healthScore !== undefined && client.healthScore !== null;
+  const score = hasScore ? client.healthScore : 0;
   const factors = client.healthFactors || {
     recentContact: false,
     planComplete: false,
     renewalSoon: false,
     outstandingFollowUps: 0
   };
-  const style = getScoreColor(score);
+  const style = getScoreColor(client.healthScore);
 
   // SVG circle params
   const size = 140;
@@ -92,7 +94,7 @@ export default function HealthScore({ client }) {
             </svg>
             {/* Center text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-3xl font-bold text-gray-900">{score}%</span>
+              <span className="text-3xl font-bold text-gray-900">{hasScore ? `${score}%` : '--%'}</span>
               <span className={`text-xs font-medium ${style.textColor}`}>{style.label}</span>
             </div>
           </div>

@@ -24,6 +24,7 @@ function getInitials(name) {
 }
 
 function getScoreColor(score) {
+  if (score === undefined || score === null) return { ring: 'text-gray-400', bg: 'bg-gray-50', text: 'text-gray-600', label: 'Pending' };
   if (score >= 80) return { ring: 'text-emerald-500', bg: 'bg-emerald-50', text: 'text-emerald-700', label: 'Healthy' };
   if (score >= 50) return { ring: 'text-amber-500', bg: 'bg-amber-50', text: 'text-amber-700', label: 'Needs Attention' };
   return { ring: 'text-red-500', bg: 'bg-red-50', text: 'text-red-700', label: 'High Risk' };
@@ -40,6 +41,7 @@ export default function ClientCard({ client }) {
     <div className="group bg-white rounded-xl border border-gray-200 shadow-card hover:shadow-card-hover transition-all duration-300 hover:-translate-y-1 overflow-hidden animate-fade-in">
       {/* Top accent stripe */}
       <div className={`h-1 ${
+        client.healthScore === undefined || client.healthScore === null ? 'bg-gray-300' :
         client.healthScore >= 80 ? 'bg-emerald-500' :
         client.healthScore >= 50 ? 'bg-amber-500' : 'bg-red-500'
       }`} />
@@ -56,7 +58,7 @@ export default function ClientCard({ client }) {
                 {client.name}
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">
-                {client.age} yrs · {client.occupation}
+                {[client.age ? `${client.age} yrs` : null, client.occupation].filter(Boolean).join(' · ') || 'New Client Profile'}
               </p>
             </div>
           </div>
@@ -64,7 +66,7 @@ export default function ClientCard({ client }) {
           {/* Health Score Circle */}
           <div className={`${scoreStyle.bg} rounded-lg px-2.5 py-1.5 text-center min-w-[56px]`}>
             <p className={`text-lg font-bold ${scoreStyle.text} leading-none`}>
-              {client.healthScore}%
+              {client.healthScore !== undefined && client.healthScore !== null ? `${client.healthScore}%` : '--%'}
             </p>
             <p className={`text-[0.6rem] ${scoreStyle.text} font-medium mt-0.5`}>
               {scoreStyle.label}
