@@ -28,9 +28,51 @@ function getAvatarColor(name) {
 }
 
 function getScoreBadge(score) {
+  if (score === undefined || score === null) return { bg: 'bg-gray-100', text: 'text-gray-600', label: 'Pending' };
   if (score >= 80) return { bg: 'bg-emerald-100', text: 'text-emerald-700', label: 'Healthy' };
   if (score >= 50) return { bg: 'bg-amber-100', text: 'text-amber-700', label: 'Needs Attention' };
   return { bg: 'bg-red-100', text: 'text-red-700', label: 'High Risk' };
+}
+
+function computeHealthScore(clientData) {
+  if (!clientData.questionnaire) {
+    return {
+      healthScore: null,
+      healthFactors: null
+    };
+  }
+
+  const factors = clientData.healthFactors || {
+    recentContact: true,
+    planComplete: false,
+    renewalSoon: false,
+    outstandingFollowUps: 0
+  };
+
+  // Determine factors
+  const hasContact = !!factors.recentContact;
+  const hasPlans = (clientData.plans && clientData.plans.length > 0) || !!factors.planComplete;
+  const noRenewalSoon = !factors.renewalSoon;
+  const pendingFollowUps = (clientData.followUps || []).filter(f => !f.completed).length;
+  const hasNoPendingFollowUps = pendingFollowUps === 0;
+  const hasQuestionnaire = true;
+
+  let score = 0;
+  if (hasContact) score += 20;
+  if (hasPlans) score += 20;
+  if (noRenewalSoon) score += 20;
+  if (hasNoPendingFollowUps) score += 20;
+  if (hasQuestionnaire) score += 20;
+
+  return {
+    healthScore: score,
+    healthFactors: {
+      recentContact: hasContact,
+      planComplete: hasPlans,
+      renewalSoon: !noRenewalSoon,
+      outstandingFollowUps: pendingFollowUps
+    }
+  };
 }
 
 export default function ClientDetail() {
@@ -109,9 +151,17 @@ export default function ClientDetail() {
         preferredConsultation: formData.communicationPreferences?.preferredConsultation || '',
       };
 
+      const updatedClient = {
+        ...client,
+        ...rootUpdates,
+        questionnaire: formData
+      };
+      const metrics = computeHealthScore(updatedClient);
+
       const docRef = doc(db, 'customers', id);
       await updateDoc(docRef, {
         ...rootUpdates,
+        ...metrics,
         questionnaire: formData,
         memoryTimeline: arrayUnion(newTimelineEvent)
       });
@@ -120,6 +170,7 @@ export default function ClientDetail() {
       setClient(prev => ({
         ...prev,
         ...rootUpdates,
+        ...metrics,
         questionnaire: formData,
         memoryTimeline: [...(prev.memoryTimeline || []), newTimelineEvent]
       }));
@@ -139,8 +190,17 @@ export default function ClientDetail() {
 
   const handleUpdateClient = async (updatedData) => {
     try {
+      const updatedClient = {
+        ...client,
+        ...updatedData
+      };
+      const metrics = computeHealthScore(updatedClient);
+
       const docRef = doc(db, 'customers', id);
-      await updateDoc(docRef, updatedData);
+      await updateDoc(docRef, {
+        ...updatedData,
+        ...metrics
+      });
       
       // Synchronize with questionnaires collection if it exists
       try {
@@ -179,7 +239,8 @@ export default function ClientDetail() {
 
       setClient((prev) => ({
         ...prev,
-        ...updatedData
+        ...updatedData,
+        ...metrics
       }));
       setShowEditModal(false);
     } catch (err) {
@@ -198,8 +259,17 @@ export default function ClientDetail() {
         const docRef = doc(db, 'customers', id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
+          const clientData = docSnap.data();
+          let finalClient = { id: docSnap.id, ...clientData };
+          
+          if (clientData.healthScore === undefined) {
+            const metrics = computeHealthScore(finalClient);
+            await updateDoc(docRef, metrics);
+            finalClient = { ...finalClient, ...metrics };
+          }
+          
           if (isMounted) {
-            setClient({ id: docSnap.id, ...docSnap.data() });
+            setClient(finalClient);
           }
         } else {
           if (isMounted) {
@@ -262,23 +332,22 @@ export default function ClientDetail() {
         return f;
       });
 
-      // Calculate new outstanding count
-      const outstandingCount = updatedFollowUps.filter((f) => !f.completed).length;
-      const updatedHealthFactors = {
-        ...(client.healthFactors || {}),
-        outstandingFollowUps: outstandingCount,
+      const updatedClient = {
+        ...client,
+        followUps: updatedFollowUps
       };
+      const metrics = computeHealthScore(updatedClient);
 
       await updateDoc(docRef, {
         followUps: updatedFollowUps,
-        healthFactors: updatedHealthFactors,
+        ...metrics
       });
 
       // Sync local state
       setClient((prev) => ({
         ...prev,
         followUps: updatedFollowUps,
-        healthFactors: updatedHealthFactors,
+        ...metrics
       }));
     } catch (err) {
       console.error('Error toggling follow-up in Firestore:', err);
@@ -291,23 +360,22 @@ export default function ClientDetail() {
       const docRef = doc(db, 'customers', id);
       const updatedFollowUps = [...(client.followUps || []), newFollowUp];
 
-      // Calculate new outstanding count
-      const outstandingCount = updatedFollowUps.filter((f) => !f.completed).length;
-      const updatedHealthFactors = {
-        ...(client.healthFactors || {}),
-        outstandingFollowUps: outstandingCount,
+      const updatedClient = {
+        ...client,
+        followUps: updatedFollowUps
       };
+      const metrics = computeHealthScore(updatedClient);
 
       await updateDoc(docRef, {
         followUps: updatedFollowUps,
-        healthFactors: updatedHealthFactors,
+        ...metrics
       });
 
       // Sync local state
       setClient((prev) => ({
         ...prev,
         followUps: updatedFollowUps,
-        healthFactors: updatedHealthFactors,
+        ...metrics
       }));
     } catch (err) {
       console.error('Error adding follow-up to Firestore:', err);
@@ -348,7 +416,7 @@ export default function ClientDetail() {
     .toUpperCase()
     .slice(0, 2);
   const avatarColor = getAvatarColor(client.name);
-  const badge = getScoreBadge(client.healthScore || 0);
+  const badge = getScoreBadge(client.healthScore);
 
   return (
     <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 animate-fade-in">
@@ -382,7 +450,7 @@ export default function ClientDetail() {
               </div>
               <p className="text-sm text-gray-500 mt-0.5 flex items-center gap-2">
                 <Briefcase size={13} className="text-gray-400" />
-                {client.occupation} · {client.age} years old
+                {[client.occupation, client.age ? `${client.age} years old` : null].filter(Boolean).join(' · ') || 'New Client Profile'}
               </p>
               <p className="text-xs text-gray-400 mt-0.5">
                 Risk Level: {client.riskLevel} · Last Contact: {client.lastContact}

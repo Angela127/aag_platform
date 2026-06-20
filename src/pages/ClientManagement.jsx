@@ -61,15 +61,19 @@ export default function ClientManagement() {
 
     // Category filter
     if (activeFilter === 'healthy') {
-      result = result.filter((c) => (c.healthScore || 0) >= 80);
+      result = result.filter((c) => c.healthScore !== undefined && c.healthScore !== null && c.healthScore >= 80);
     } else if (activeFilter === 'attention') {
-      result = result.filter((c) => (c.healthScore || 0) >= 50 && (c.healthScore || 0) < 80);
+      result = result.filter((c) => c.healthScore !== undefined && c.healthScore !== null && c.healthScore >= 50 && c.healthScore < 80);
     } else if (activeFilter === 'high-risk') {
-      result = result.filter((c) => (c.healthScore || 0) < 50);
+      result = result.filter((c) => c.healthScore !== undefined && c.healthScore !== null && c.healthScore < 50);
     }
 
-    // Sort by risk: lowest healthScore (highest risk) first
-    result.sort((a, b) => (a.healthScore || 0) - (b.healthScore || 0));
+    // Sort by risk: lowest healthScore (highest risk) first, placing undefined/pending score at the end
+    result.sort((a, b) => {
+      const aScore = a.healthScore !== undefined && a.healthScore !== null ? a.healthScore : 999;
+      const bScore = b.healthScore !== undefined && b.healthScore !== null ? b.healthScore : 999;
+      return aScore - bScore;
+    });
 
     return result;
   }, [clients, search, activeFilter]);
@@ -85,39 +89,15 @@ export default function ClientManagement() {
         name: newClient.name,
         age: parseInt(newClient.age, 10),
         occupation: newClient.occupation,
-        healthScore: 70,
+        healthScore: null,
         riskLevel: newClient.riskLevel,
         lastContact: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
         activePlans: 0,
         avatar: '',
-        maritalStatus: 'Single',
-        mobileNumber: '',
-        dob: '',
-        nationality: '',
-        gender: '',
-        employmentStatus: 'Employed',
-        companyName: '',
-        industry: '',
-        yearsExperience: '0',
-        numDependents: 0,
-        spouseName: '',
-        childrenAges: '',
-        anyFamilyDependent: 'No',
-        estimatedInvestableAssets: '',
-        annualIncomeRange: '',
-        financialGoals: [],
-        preferredLanguage: 'English',
-        preferredConsultation: 'Online Meeting',
-        familyDetails: '',
         plans: [],
         followUps: [],
         expenses: [],
-        healthFactors: {
-          recentContact: true,
-          planComplete: false,
-          renewalSoon: false,
-          outstandingFollowUps: 0,
-        },
+        healthFactors: null,
         memorySummary: `Client profile created for ${newClient.name}.`,
         memoryTimeline: [
           { date: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }), category: 'Life Event', description: 'Client onboarded to platform.' }
@@ -145,9 +125,9 @@ export default function ClientManagement() {
   // Count per category
   const counts = useMemo(() => ({
     all: clients.length,
-    healthy: clients.filter((c) => (c.healthScore || 0) >= 80).length,
-    attention: clients.filter((c) => (c.healthScore || 0) >= 50 && (c.healthScore || 0) < 80).length,
-    'high-risk': clients.filter((c) => (c.healthScore || 0) < 50).length,
+    healthy: clients.filter((c) => c.healthScore !== undefined && c.healthScore !== null && c.healthScore >= 80).length,
+    attention: clients.filter((c) => c.healthScore !== undefined && c.healthScore !== null && c.healthScore >= 50 && c.healthScore < 80).length,
+    'high-risk': clients.filter((c) => c.healthScore !== undefined && c.healthScore !== null && c.healthScore < 50).length,
   }), [clients]);
 
   if (loading && clients.length === 0) {
