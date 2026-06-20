@@ -68,6 +68,9 @@ export default function ClientManagement() {
       result = result.filter((c) => (c.healthScore || 0) < 50);
     }
 
+    // Sort by risk: lowest healthScore (highest risk) first
+    result.sort((a, b) => (a.healthScore || 0) - (b.healthScore || 0));
+
     return result;
   }, [clients, search, activeFilter]);
 
@@ -87,7 +90,24 @@ export default function ClientManagement() {
         lastContact: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
         activePlans: 0,
         avatar: '',
-        specialPreferences: { birthday: '', notes: '' },
+        maritalStatus: 'Single',
+        mobileNumber: '',
+        dob: '',
+        nationality: '',
+        gender: '',
+        employmentStatus: 'Employed',
+        companyName: '',
+        industry: '',
+        yearsExperience: '0',
+        numDependents: 0,
+        spouseName: '',
+        childrenAges: '',
+        anyFamilyDependent: 'No',
+        estimatedInvestableAssets: '',
+        annualIncomeRange: '',
+        financialGoals: [],
+        preferredLanguage: 'English',
+        preferredConsultation: 'Online Meeting',
         familyDetails: '',
         plans: [],
         followUps: [],
@@ -221,7 +241,7 @@ export default function ClientManagement() {
         </div>
       </div>
 
-      {/* Client Grid */}
+      {/* Client Sections */}
       {filteredClients.length === 0 ? (
         <div className="text-center py-16 animate-fade-in">
           <Users size={40} className="mx-auto text-gray-300 mb-3" />
@@ -234,7 +254,7 @@ export default function ClientManagement() {
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 animate-fade-in">
           {filteredClients.map((client) => (
             <ClientCard key={client.id} client={client} />
           ))}

@@ -7,8 +7,13 @@ function getScoreColor(score) {
 }
 
 export default function HealthScore({ client }) {
-  const score = client.healthScore;
-  const factors = client.healthFactors;
+  const score = client.healthScore || 0;
+  const factors = client.healthFactors || {
+    recentContact: false,
+    planComplete: false,
+    renewalSoon: false,
+    outstandingFollowUps: 0
+  };
   const style = getScoreColor(score);
 
   // SVG circle params
@@ -42,6 +47,12 @@ export default function HealthScore({ client }) {
       label: 'Outstanding Follow-ups',
       good: 'No pending follow-ups',
       bad: `${factors.outstandingFollowUps} pending follow-up${factors.outstandingFollowUps !== 1 ? 's' : ''}`,
+    },
+    {
+      ok: !!client.questionnaire,
+      label: 'Fact-find Questionnaire',
+      good: 'Fact-find questionnaire on file',
+      bad: 'No fact-find questionnaire on file',
     },
   ];
 

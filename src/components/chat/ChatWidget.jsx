@@ -24,6 +24,269 @@ const categories = [
   { id: 'corporate', name: 'Corporate & Benefits', icon: '🏢', welcome: "Welcome to Corporate Solutions. Ask me how to outline statutory EPF/SOCSO rules, structure group insurance benefits, or handle objections around employee retention." }
 ];
 
+const customersToSeed = [
+  {
+    id: 'customer-gmail-com',
+    name: 'TS Tho',
+    email: 'customer@gmail.com',
+    mobileNumber: '+65 8123 4567',
+    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&h=100&fit=crop',
+    age: 41,
+    occupation: 'Property Developer',
+    healthScore: 68,
+    riskLevel: 'Medium',
+    lastContact: '18 June 2026',
+    activePlans: 2,
+    plans: [
+      { name: 'Whole Life Insurance', premium: 'RM400/month', renewal: '12 Oct 2026', coverage: 'RM600,000' },
+      { name: 'Vanguard Capital Growth Fund', premium: 'RM500/month', renewal: '15 Feb 2027', coverage: 'RM300,000' }
+    ],
+    followUps: [
+      { task: 'Send property market analysis', date: '25 June 2026', priority: 'high', completed: false }
+    ],
+    expenses: [],
+    healthFactors: { recentContact: true, planComplete: false, renewalSoon: false, outstandingFollowUps: 1 },
+    familyDetails: 'Married, one child',
+    needs: ["Property Purchase", "Real Estate Sales"],
+    needsSummary: "Looking to liquidate an existing commercial asset and acquire a freehold residential property."
+  },
+  {
+    id: 'osman-campos',
+    name: 'Osman Campos',
+    email: 'osman@aag.com',
+    mobileNumber: '+65 9012 3456',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
+    age: 29,
+    occupation: 'Graphic Designer',
+    healthScore: 85,
+    riskLevel: 'Low',
+    lastContact: '20 June 2026',
+    activePlans: 2,
+    plans: [
+      { name: 'Medical Card', premium: 'RM150/month', renewal: '12 Dec 2026', coverage: 'RM200,000' },
+      { name: 'Personal Accident Plan', premium: 'RM50/month', renewal: '15 Sep 2026', coverage: 'RM100,000' }
+    ],
+    followUps: [],
+    expenses: [],
+    healthFactors: { recentContact: true, planComplete: true, renewalSoon: false, outstandingFollowUps: 0 },
+    familyDetails: 'Single'
+  },
+  {
+    id: 'jayden-church',
+    name: 'Jayden Church',
+    email: 'jayden@aag.com',
+    mobileNumber: '+65 9123 4567',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop',
+    age: 34,
+    occupation: 'Product Designer',
+    healthScore: 78,
+    riskLevel: 'Medium',
+    lastContact: '19 June 2026',
+    activePlans: 1,
+    plans: [
+      { name: 'Critical Illness Plan', premium: 'RM200/month', renewal: '05 May 2027', coverage: 'RM150,000' }
+    ],
+    followUps: [
+      { task: 'Follow up on design layout review options', date: '28 June 2026', priority: 'medium', completed: false }
+    ],
+    expenses: [],
+    healthFactors: { recentContact: true, planComplete: true, renewalSoon: false, outstandingFollowUps: 1 },
+    familyDetails: 'Married'
+  },
+  {
+    id: 'jacob-mcleod',
+    name: 'Jacob Mcleod',
+    email: 'jacob@aag.com',
+    mobileNumber: '+65 9234 5678',
+    avatar: 'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=100&h=100&fit=crop',
+    age: 45,
+    occupation: 'Project Manager',
+    healthScore: 52,
+    riskLevel: 'High',
+    lastContact: '18 June 2026',
+    activePlans: 1,
+    plans: [
+      { name: 'Term Life Insurance', premium: 'RM350/month', renewal: '20 July 2026', coverage: 'RM500,000' }
+    ],
+    followUps: [
+      { task: 'Send prototype link and discuss coverage expansion', date: '22 June 2026', priority: 'high', completed: false }
+    ],
+    expenses: [],
+    healthFactors: { recentContact: true, planComplete: false, renewalSoon: true, outstandingFollowUps: 1 },
+    familyDetails: 'Married, two children'
+  },
+  {
+    id: 'jasmin-lowery',
+    name: 'Jasmin Lowery',
+    email: 'jasmin@aag.com',
+    mobileNumber: '+65 9345 6789',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop',
+    age: 35,
+    occupation: 'Operations Director',
+    healthScore: 82,
+    riskLevel: 'Medium',
+    lastContact: '15 June 2026',
+    activePlans: 3,
+    plans: [
+      { name: 'Whole Life Insurance', premium: 'RM300/month', renewal: '20 Aug 2026', coverage: 'RM500,000' },
+      { name: 'Investment-Linked Plan', premium: 'RM500/month', renewal: '15 Jan 2027', coverage: 'RM200,000' },
+      { name: 'Education Fund', premium: 'RM200/month', renewal: '01 Mar 2027', coverage: 'RM100,000' }
+    ],
+    followUps: [
+      { task: 'Review investment plan', date: '25 June 2026', priority: 'medium', completed: false },
+      { task: 'Education fund annual review', date: '01 Aug 2026', priority: 'low', completed: false }
+    ],
+    expenses: [
+      { type: 'Gift', description: 'Birthday hamper', amount: 'RM150', date: '12 March 2026' }
+    ],
+    healthFactors: { recentContact: true, planComplete: true, renewalSoon: true, outstandingFollowUps: 1 },
+    familyDetails: 'Married, two children (ages 8 and 10)',
+    needs: ["Tax Planning", "Estate Planning"],
+    needsSummary: "Needs complex personal tax planning alongside asset structuring for cross-border investments."
+  },
+  {
+    id: 'zaid-myers',
+    name: 'Zaid Myers',
+    email: 'zaid@aag.com',
+    mobileNumber: '+65 9456 7890',
+    avatar: 'https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=100&h=100&fit=crop',
+    age: 28,
+    occupation: 'Frontend Engineer',
+    healthScore: 75,
+    riskLevel: 'Low',
+    lastContact: '17 June 2026',
+    activePlans: 2,
+    plans: [
+      { name: 'Medical Insurance', premium: 'RM180/month', renewal: '10 Oct 2026', coverage: 'RM300,000' },
+      { name: 'Unit Trust Growth', premium: 'RM400/month', renewal: '01 Dec 2026', coverage: 'RM150,000' }
+    ],
+    followUps: [
+      { task: 'Send investment report', date: '25 June 2026', priority: 'medium', completed: false },
+      { task: 'Follow up on critical illness rider', date: '10 July 2026', priority: 'low', completed: false }
+    ],
+    expenses: [],
+    healthFactors: { recentContact: true, planComplete: true, renewalSoon: false, outstandingFollowUps: 2 },
+    familyDetails: 'Single, no dependents'
+  },
+  {
+    id: 'anthony-cordanes',
+    name: 'Anthony Cordanes',
+    email: 'anthony@aag.com',
+    mobileNumber: '+65 9567 8901',
+    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&h=100&fit=crop',
+    age: 48,
+    occupation: 'Financial Consultant',
+    healthScore: 92,
+    riskLevel: 'Low',
+    lastContact: '15 June 2026',
+    activePlans: 4,
+    plans: [
+      { name: 'Whole Life Insurance', premium: 'RM1,200/month', renewal: '15 Nov 2026', coverage: 'RM2,000,000' },
+      { name: 'Investment-Linked Plan', premium: 'RM800/month', renewal: '01 Feb 2027', coverage: 'RM500,000' },
+      { name: 'Education Fund A', premium: 'RM300/month', renewal: '01 Mar 2027', coverage: 'RM200,000' },
+      { name: 'Education Fund B', premium: 'RM300/month', renewal: '01 Mar 2027', coverage: 'RM200,000' }
+    ],
+    followUps: [
+      { task: 'Quarterly portfolio review', date: '01 July 2026', priority: 'low', completed: false }
+    ],
+    expenses: [
+      { type: 'Gift', description: 'Birthday wine', amount: 'RM180', date: '05 Sep 2025' }
+    ],
+    healthFactors: { recentContact: true, planComplete: true, renewalSoon: false, outstandingFollowUps: 0 },
+    familyDetails: 'Married, three children (ages 5, 9, and 13)'
+  },
+  {
+    id: 'conner-garcia',
+    name: 'Conner Garcia',
+    email: 'conner@aag.com',
+    mobileNumber: '+65 9678 9012',
+    avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=100&h=100&fit=crop',
+    age: 31,
+    occupation: 'Creative Director',
+    healthScore: 40,
+    riskLevel: 'High',
+    lastContact: '12 June 2026',
+    activePlans: 1,
+    plans: [
+      { name: 'Basic Term Life', premium: 'RM250/month', renewal: '01 Aug 2026', coverage: 'RM400,000' }
+    ],
+    followUps: [
+      { task: 'Discuss maternity and child coverage', date: '22 June 2026', priority: 'high', completed: false },
+      { task: 'Term life plan renewal', date: '15 July 2026', priority: 'high', completed: false },
+      { task: 'Review overall financial plan', date: '01 Aug 2026', priority: 'medium', completed: false }
+    ],
+    expenses: [],
+    healthFactors: { recentContact: true, planComplete: false, renewalSoon: true, outstandingFollowUps: 3 },
+    familyDetails: 'Married, expecting first child'
+  },
+  {
+    id: 'vanessa-cox',
+    name: 'Vanessa Cox',
+    email: 'vanessa@aag.com',
+    mobileNumber: '+65 9789 0123',
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop',
+    age: 39,
+    occupation: 'Executive Chef',
+    healthScore: 61,
+    riskLevel: 'Medium',
+    lastContact: '14 June 2026',
+    activePlans: 2,
+    plans: [
+      { name: 'Medical Card Elite', premium: 'RM350/month', renewal: '18 Nov 2026', coverage: 'RM1,000,000' },
+      { name: 'Retirement Annuity', premium: 'RM600/month', renewal: '01 Apr 2027', coverage: 'RM300,000' }
+    ],
+    followUps: [
+      { task: 'Send annuity performance report', date: '30 June 2026', priority: 'medium', completed: false }
+    ],
+    expenses: [],
+    healthFactors: { recentContact: true, planComplete: true, renewalSoon: false, outstandingFollowUps: 1 },
+    familyDetails: 'Married, one teenager'
+  }
+];
+
+
+// Automatic Seeding Logic to initialize Firestore collections if empty
+const seedFirestore = async () => {
+  try {
+    const customersRef = collection(db, 'customers');
+    const custSnap = await getDocs(customersRef);
+    const hasCustomerTho = custSnap.docs.some(doc => doc.id === 'customer-gmail-com');
+
+    if (custSnap.empty || !hasCustomerTho) {
+      console.log('Seeding Firestore with customers and messages subcollections...');
+      for (const chat of initialChats) {
+        const { messages, ...customerMeta } = chat;
+        
+        const matchToSeed = customersToSeed.find(c => c.id === chat.id || c.email === chat.email);
+        
+        const docData = {
+          ...matchToSeed,
+          ...customerMeta,
+          status: 'active',
+          updatedAt: new Date(),
+          createdAt: new Date()
+        };
+        
+        const custDocRef = doc(db, 'customers', chat.id);
+        await setDoc(custDocRef, docData, { merge: true });
+
+        const messagesRef = collection(custDocRef, 'messages');
+        let baseTime = Date.now() - (messages.length * 60000); 
+        for (const [index, msg] of messages.entries()) {
+          const msgDocRef = doc(messagesRef, msg.id || `m_${index}`);
+          await setDoc(msgDocRef, {
+            ...msg,
+            createdAt: new Date(baseTime + (index * 60000))
+          });
+        }
+      }
+      console.log('Customers and messages seeding completed.');
+    }
+  } catch (error) {
+    console.error('Error during Firestore database seeding: ', error);
+  }
+};
+
 export default function ChatWidget({ isInline = false }) {
   const { user } = useAuth();
   

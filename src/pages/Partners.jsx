@@ -242,7 +242,6 @@ export default function Partners() {
     const checkAndSeed = async () => {
       try {
         const partnersSnapshot = await getDocs(collection(db, 'partners'));
-        const clientsSnapshot = await getDocs(collection(db, 'clients'));
         const referralsSnapshot = await getDocs(collection(db, 'referrals'));
 
         let seedNeeded = false;
@@ -252,14 +251,6 @@ export default function Partners() {
           seedNeeded = true;
           for (const partner of INITIAL_PARTNERS) {
             await setDoc(doc(db, 'partners', partner.id), partner);
-          }
-        }
-        
-        // If clients collection is empty, seed it
-        if (clientsSnapshot.empty) {
-          seedNeeded = true;
-          for (const client of INITIAL_CLIENTS) {
-            await setDoc(doc(db, 'clients', client.id), client);
           }
         }
         
@@ -307,8 +298,8 @@ export default function Partners() {
       });
       unsubs.push(unsubReferrals);
 
-      // Set up listener for clients
-      const unsubClients = onSnapshot(collection(db, 'clients'), (snapshot) => {
+      // Set up listener for clients using the unified customers collection
+      const unsubClients = onSnapshot(collection(db, 'customers'), (snapshot) => {
         const list = [];
         snapshot.forEach(docSnap => {
           list.push({ ...docSnap.data(), id: docSnap.id });

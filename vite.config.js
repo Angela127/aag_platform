@@ -103,7 +103,7 @@ export default defineConfig({
             });
             req.on('end', async () => {
               try {
-                const { contents } = JSON.parse(body);
+                const { contents, systemInstruction } = JSON.parse(body);
 
                 // Configure Vertex AI using local google.json credentials
                 const credPath = path.resolve(process.cwd(), 'src/credentials/google.json');
@@ -120,10 +120,22 @@ export default defineConfig({
 
                 const ai = new GoogleGenAI({});
 
-                const response = await ai.models.generateContent({
+                const requestPayload = {
                   model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
-                  contents: contents
-                });
+                  contents: contents,
+                  config: {
+                    temperature: 0.7,
+                    maxOutputTokens: 1024,
+                    topP: 0.9,
+                  },
+                };
+
+                // Use systemInstruction if provided
+                if (systemInstruction) {
+                  requestPayload.config.systemInstruction = systemInstruction;
+                }
+
+                const response = await ai.models.generateContent(requestPayload);
 
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ text: response.text || '' }));

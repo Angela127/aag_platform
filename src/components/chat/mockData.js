@@ -133,7 +133,7 @@ export const initialChats = [
     ]
   },
   {
-    id: 'jasmin-lowery-dm',
+    id: 'jasmin-lowery',
     name: 'Jasmin Lowery',
     email: 'jasmin@aag.com',
     avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop',
