@@ -194,19 +194,92 @@
   color: var(--text-muted);
 }
 
-/* Notification list */
-.notifList { list-style: none; max-height: 240px; overflow-y: auto; }
+/* Notification list & scroll */
+.notifScrollArea {
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+.notifGroup {
+  margin-bottom: 12px;
+}
+.notifGroup:last-child {
+  margin-bottom: 0;
+}
+.groupTitle {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--aag-primary);
+  background: #fdfcfb;
+  padding: 6px 16px;
+  letter-spacing: 0.05em;
+  margin: 0;
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+.notifGroup:first-child .groupTitle {
+  border-top: none;
+}
+.notifList { list-style: none; }
 .notifItem {
   padding: 10px 16px;
   border-bottom: 1px solid var(--border-light);
-  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
   transition: background var(--dur-fast) var(--ease);
 }
 .notifItem:hover { background: var(--surface); }
-.notifItem p { font-size: 0.8125rem; color: var(--text-primary); margin-bottom: 2px; }
-.notifItem span { font-size: 0.75rem; color: var(--text-muted); }
+.notifContent {
+  flex: 1;
+  min-width: 0;
+}
+.notifText { font-size: 0.8125rem; color: var(--text-primary); margin-bottom: 2px; line-height: 1.3; }
+.notifTime { font-size: 0.72rem; color: var(--text-muted); display: block; }
 .notifItem.unread { background: #fef7f7; }
 .notifItem.unread:hover { background: #fef0f0; }
+
+.notifActions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.5;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+.notifItem:hover .notifActions {
+  opacity: 1;
+}
+.actionBtnRead,
+.actionBtnDismiss {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all var(--dur-fast) var(--ease);
+  padding: 0;
+}
+.actionBtnRead:hover {
+  background: var(--success-bg);
+  color: var(--success);
+}
+.actionBtnDismiss:hover {
+  background: var(--danger-bg);
+  color: var(--danger);
+}
+.emptyNotifs {
+  padding: 24px 16px;
+  text-align: center;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
 
 .dropdownFooter {
   padding: 10px 16px;

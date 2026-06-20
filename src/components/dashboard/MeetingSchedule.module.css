@@ -6,11 +6,15 @@
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-sm);
   overflow: hidden;
+  height: 430px;
+  display: flex;
+  flex-direction: column;
 }
 
 .sectionHeader {
   padding: 16px 20px 14px;
   border-bottom: 1px solid var(--border-light);
+  flex-shrink: 0;
 }
 .sectionTitle {
   font-size: 1rem;
@@ -21,28 +25,32 @@
 .layout {
   display: flex;
   gap: 0;
+  flex: 1;
+  min-height: 0;
 }
 
 /* Mini Calendar */
 .miniCal {
-  flex: 0 0 220px;
+  flex: 0 0 320px;
   border-right: 1px solid var(--border-light);
   padding: 16px;
+  display: flex;
+  flex-direction: column;
 }
 .calHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 .calMonth {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--text-primary);
 }
 .calNav {
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border);
   background: none;
@@ -53,15 +61,19 @@
   color: var(--text-muted);
   transition: all var(--dur-fast) var(--ease);
 }
-.calNav:hover { background: var(--surface); color: var(--text-primary); }
+.calNav:hover {
+  background: var(--surface);
+  color: var(--text-primary);
+  border-color: var(--text-secondary);
+}
 
 .calGrid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+  gap: 4px;
 }
 .calDayLabel {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 600;
   color: var(--text-muted);
   text-align: center;
@@ -74,79 +86,253 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   border: none;
   background: none;
-  border-radius: var(--radius-sm);
+  border-radius: 8px;
   cursor: pointer;
   color: var(--text-primary);
   font-family: inherit;
   transition: all var(--dur-fast) var(--ease);
 }
-.calCell:hover { background: var(--surface); }
-.calCell.today { font-weight: 700; color: var(--aag-primary); }
-.calCell.selected { background: var(--aag-primary); color: white !important; }
-.calCell.selected:hover { background: var(--aag-primary-dark); }
+.calCell:hover {
+  background: var(--surface);
+  transform: translateY(-1px);
+}
+.calCell.today {
+  font-weight: 700;
+  color: var(--aag-primary);
+}
+.calCell.selected {
+  background: var(--aag-primary);
+  color: white !important;
+  box-shadow: 0 4px 10px rgba(135, 1, 5, 0.25);
+}
+.calCell.selected:hover {
+  background: var(--aag-primary-dark);
+}
 
 .dot {
   position: absolute;
-  bottom: 2px;
+  bottom: 4px;
   left: 50%;
   transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: currentColor;
   opacity: 0.6;
 }
-.calCell.selected .dot { background: white; opacity: .7; }
+.calCell.selected .dot {
+  background: white;
+  opacity: .7;
+}
 
-/* Timeline */
 .timelineWrap {
   flex: 1;
-  padding: 12px 16px;
+  padding: 16px;
   overflow-y: auto;
-  max-height: 360px;
 }
 .timelineDate {
   font-size: 0.8125rem;
   font-weight: 500;
   color: var(--text-muted);
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
-.timeline { display: flex; flex-direction: column; gap: 0; }
-
-.timeRow {
+.meetingList {
   display: flex;
-  gap: 12px;
-  min-height: 36px;
-  border-top: 1px solid var(--border-light);
+  flex-direction: column;
+  gap: 14px;
 }
-.timeRow:last-child { border-bottom: 1px solid var(--border-light); }
 
-.timeLabel {
-  flex: 0 0 44px;
+/* Premium Meeting Cards */
+.meetingCardItem {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: all var(--dur-fast) var(--ease);
+}
+.meetingCardItem:hover {
+  box-shadow: var(--shadow-md);
+  border-color: #c4c0b8;
+}
+
+.meetingCardHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.platformIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+.meetingCardTitle {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.meetingMetaRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.meetingMetaItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.meetingDesc {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.meetingTagsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.meetingTagBadge {
   font-size: 0.6875rem;
   font-weight: 500;
   color: var(--text-muted);
-  padding-top: 10px;
-  text-align: right;
-  letter-spacing: .02em;
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
 }
 
-.timeContent {
+.meetingCardActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid var(--border-light);
+  padding-top: 10px;
+  margin-top: 4px;
+}
+
+.meetingActionBtn {
   flex: 1;
   display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding: 4px 0;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease);
+  font-family: inherit;
+}
+.meetingActionBtn:hover {
+  background: var(--surface);
+  border-color: var(--text-muted);
 }
 
-.meetingBlock {
-  padding: 6px 10px;
-  border-radius: 4px;
+.meetingActionBtn.readyActive {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+  color: #16a34a;
+}
+.meetingActionBtn.readyActive:hover {
+  background: #dcfce7;
+  border-color: #86efac;
+}
+
+.meetingActionBtn.notesActive {
+  background: var(--surface);
+  border-color: var(--text-muted);
+}
+
+.meetingEyeBtn {
+  width: 28px;
+  height: 28px;
   display: flex;
-  flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  justify-content: center;
+  background: var(--white);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.meetingEyeBtn:hover {
+  background: var(--surface);
+  color: var(--text-primary);
+  border-color: var(--text-muted);
+}
+
+/* Collapsible Notes Drawer */
+.meetingNotesSection {
+  background: var(--surface);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+  animation: slideDown var(--dur-fast) var(--ease);
+}
+.meetingNotesTitle {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  font-size: 0.6875rem;
+  letter-spacing: .02em;
+}
+.meetingNotesText {
+  margin: 0;
+  color: var(--text-primary);
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-4px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .wrap {
+    height: auto;
+    max-height: none;
+  }
+  .layout {
+    flex-direction: column;
+  }
+  .miniCal {
+    flex: 0 0 auto;
+    border-right: none;
+    border-bottom: 1px solid var(--border-light);
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
+    padding: 20px 16px;
+  }
+  .timelineWrap {
+    max-height: 400px;
+    overflow-y: auto;
+  }
 }

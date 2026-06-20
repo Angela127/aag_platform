@@ -14,8 +14,7 @@ import {
   arrayMove,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical, Calendar, Tag } from 'lucide-react';
-import { mockKanban } from '../../lib/mockData.js';
+import { GripVertical, Calendar, Tag, Filter, ArrowRight, X, Plus } from 'lucide-react';
 import styles from './KanbanBoard.module.css';
 
 const PRIORITY_CONFIG = {
@@ -30,7 +29,7 @@ const COLUMNS = [
   { id: 'done',       label: 'Done',         accent: '#16a34a' },
 ];
 
-function KanbanCard({ card, isDragging = false }) {
+function KanbanCard({ card, columnId, onMove, isDragging = false }) {
   const p = PRIORITY_CONFIG[card.priority];
   return (
     <div className={`${styles.card} ${isDragging ? styles.cardDragging : ''}`}>
@@ -49,12 +48,25 @@ function KanbanCard({ card, isDragging = false }) {
           <Calendar size={11} />
           {new Date(card.dueDate).toLocaleDateString('en-SG', { day:'numeric', month:'short' })}
         </span>
+        {columnId !== 'done' && onMove && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onMove(card.id, columnId);
+            }}
+            className={styles.moveBtn}
+            title={columnId === 'todo' ? 'Move to In Progress' : 'Move to Done'}
+          >
+            <span>{columnId === 'todo' ? 'Start' : 'Complete'}</span>
+            <ArrowRight size={11} />
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
-function SortableCard({ card }) {
+function SortableCard({ card, columnId, onMove }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: card.id });
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -66,18 +78,21 @@ function SortableCard({ card }) {
       <div className={styles.dragHandle} {...attributes} {...listeners}>
         <GripVertical size={14} />
       </div>
-      <KanbanCard card={card} />
+      <KanbanCard card={card} columnId={columnId} onMove={onMove} />
     </div>
   );
 }
 
-export default function KanbanBoard() {
-  const [columns, setColumns] = useState({
-    todo:       mockKanban.todo,
-    inprogress: mockKanban.inprogress,
-    done:       mockKanban.done,
-  });
+export default function KanbanBoard({ selectedDate, columns, setColumns }) {
+  const [isFiltered, setIsFiltered] = useState(true);
   const [activeCard, setActiveCard] = useState(null);
+
+  // Task creation form state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [clientName, setClientName] = useState('');
+  const [taskDesc, setTaskDesc] = useState('');
+  const [due, setDue] = useState(selectedDate);
+  const [priority, setPriority] = useState('medium');
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 6 } }));
 
@@ -120,13 +135,104 @@ export default function KanbanBoard() {
     }
   };
 
-  const allIds = Object.values(columns).flat().map(c => c.id);
+  // Move task card to next status via quick-action button
+  const handleMoveCard = (cardId, currentColId) => {
+    const nextColMap = {
+      todo: 'inprogress',
+      inprogress: 'done',
+    };
+    const toCol = nextColMap[currentColId];
+    if (!toCol) return;
+
+    setColumns(prev => {
+      const card = prev[currentColId].find(c => c.id === cardId);
+      if (!card) return prev;
+      return {
+        ...prev,
+        [currentColId]: prev[currentColId].filter(c => c.id !== cardId),
+        [toCol]: [...prev[toCol], card],
+      };
+    });
+  };
+
+  // Open the add task modal and prefill the due date
+  const handleOpenModal = () => {
+    setClientName('');
+    setTaskDesc('');
+    setDue(selectedDate);
+    setPriority('medium');
+    setShowAddModal(true);
+  };
+
+  // Handle task submission
+  const handleCreateTask = (e) => {
+    e.preventDefault();
+    if (!clientName.trim() || !taskDesc.trim() || !due) {
+      return;
+    }
+
+    const newTask = {
+      id: `k_${Date.now()}`,
+      client: clientName.trim(),
+      task: taskDesc.trim(),
+      dueDate: due,
+      priority: priority,
+    };
+
+    setColumns(prev => ({
+      ...prev,
+      todo: [newTask, ...prev.todo],
+    }));
+
+    setShowAddModal(false);
+  };
+
+  // Compute tasks to display based on isFiltered setting
+  const displayColumns = {};
+  for (const [colId, cards] of Object.entries(columns)) {
+    displayColumns[colId] = isFiltered
+      ? cards.filter(c => c.dueDate === selectedDate)
+      : cards;
+  }
+
+  const allIds = Object.values(displayColumns).flat().map(c => c.id);
+
+  // Format selected date safely for display
+  const formatSelectedDate = (dateStr) => {
+    const [year, month, day] = dateStr.split('-').map(Number);
+    const dateObj = new Date(year, month - 1, day);
+    return dateObj.toLocaleDateString('en-SG', { day: 'numeric', month: 'short' });
+  };
 
   return (
     <div className={styles.wrap}>
       <div className={styles.header}>
-        <h3 className={styles.title}>Task Board</h3>
-        <span className={styles.hint}>Drag cards between columns</span>
+        <div>
+          <h3 className={styles.title}>Task Board</h3>
+          <span className={styles.hint}>
+            {isFiltered
+              ? `Showing tasks due on ${formatSelectedDate(selectedDate)}`
+              : 'Showing all tasks'} · Drag cards or use buttons to move
+          </span>
+        </div>
+        <div className={styles.headerActions}>
+          <button
+            onClick={handleOpenModal}
+            className="btn btn-primary btn-sm"
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <Plus size={13} />
+            New Task
+          </button>
+          <button
+            onClick={() => setIsFiltered(!isFiltered)}
+            className="btn btn-secondary btn-sm"
+            style={{ display: 'flex', alignItems: 'center', gap: 6 }}
+          >
+            <Filter size={13} />
+            {isFiltered ? 'Show All' : `Filter by Date (${formatSelectedDate(selectedDate)})`}
+          </button>
+        </div>
       </div>
       <DndContext
         sensors={sensors}
@@ -145,18 +251,23 @@ export default function KanbanBoard() {
                 <div className={styles.colHeader}>
                   <div className={styles.colDot} style={{ background: col.accent }} />
                   <span className={styles.colLabel}>{col.label}</span>
-                  <span className={styles.colCount}>{columns[col.id].length}</span>
+                  <span className={styles.colCount}>{displayColumns[col.id].length}</span>
                 </div>
                 <div className={styles.colBody}>
                   <SortableContext
-                    items={columns[col.id].map(c => c.id)}
+                    items={displayColumns[col.id].map(c => c.id)}
                     strategy={verticalListSortingStrategy}
                   >
-                    {columns[col.id].map(card => (
-                      <SortableCard key={card.id} card={card} />
+                    {displayColumns[col.id].map(card => (
+                      <SortableCard
+                        key={card.id}
+                        card={card}
+                        columnId={col.id}
+                        onMove={handleMoveCard}
+                      />
                     ))}
                   </SortableContext>
-                  {columns[col.id].length === 0 && (
+                  {displayColumns[col.id].length === 0 && (
                     <div className={styles.emptyCol}>No tasks here</div>
                   )}
                 </div>
@@ -168,6 +279,92 @@ export default function KanbanBoard() {
           {activeCard && <KanbanCard card={activeCard} isDragging />}
         </DragOverlay>
       </DndContext>
+
+      {/* Create Task Modal Form */}
+      {showAddModal && (
+        <div className={styles.modalOverlay} onClick={(e) => e.target === e.currentTarget && setShowAddModal(false)}>
+          <div className={styles.modalBox}>
+            <div className={styles.modalHeader}>
+              <h4 className={styles.modalTitle}>Create New Task</h4>
+              <button className={styles.modalClose} onClick={() => setShowAddModal(false)} aria-label="Close">
+                <X size={16} />
+              </button>
+            </div>
+            <form onSubmit={handleCreateTask}>
+              <div className={styles.modalBody}>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel} htmlFor="clientName">Client Name</label>
+                  <input
+                    id="clientName"
+                    type="text"
+                    required
+                    className={styles.formInput}
+                    placeholder="Enter client name (e.g., John Tan)"
+                    value={clientName}
+                    onChange={(e) => setClientName(e.target.value)}
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel} htmlFor="taskDesc">Task Details</label>
+                  <textarea
+                    id="taskDesc"
+                    required
+                    className={styles.formTextarea}
+                    placeholder="Describe the task..."
+                    value={taskDesc}
+                    onChange={(e) => setTaskDesc(e.target.value)}
+                  />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="dueDate">Due Date</label>
+                    <input
+                      id="dueDate"
+                      type="date"
+                      required
+                      className={styles.formInput}
+                      value={due}
+                      onChange={(e) => setDue(e.target.value)}
+                    />
+                  </div>
+
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel} htmlFor="priority">Priority</label>
+                    <select
+                      id="priority"
+                      className={styles.formSelect}
+                      value={priority}
+                      onChange={(e) => setPriority(e.target.value)}
+                    >
+                      <option value="high">High</option>
+                      <option value="medium">Medium</option>
+                      <option value="low">Low</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <div className={styles.modalFooter}>
+                <button
+                  type="button"
+                  className="btn btn-secondary btn-sm"
+                  onClick={() => setShowAddModal(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary btn-sm"
+                >
+                  Create Task
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,15 +1,28 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import MorningBriefingModal from '../components/dashboard/MorningBriefingModal.jsx';
-import KPICardRow from '../components/dashboard/KPICardRow.jsx';
 import MeetingSchedule from '../components/dashboard/MeetingSchedule.jsx';
-import KanbanBoard from '../components/dashboard/KanbanBoard.jsx';
+import TaskChecklist from '../components/dashboard/TaskChecklist.jsx';
 import SmartReminderPanel from '../components/dashboard/SmartReminderPanel.jsx';
+import KanbanBoard from '../components/dashboard/KanbanBoard.jsx';
+
+import { mockKanban, mockMeetings, mockPipeline } from '../lib/mockData.js';
+import { Users, TrendingUp, Calendar, FileText, CheckSquare, Sparkles } from 'lucide-react';
 import styles from './AgentDashboard.module.css';
 
 export default function AgentDashboard() {
   const { user } = useAuth();
   const [showBriefing, setShowBriefing] = useState(false);
+  const [selectedDate, setSelectedDate] = useState('2026-06-20');
+  
+  // Shared States
+  const [meetings] = useState(mockMeetings);
+  const [columns, setColumns] = useState({
+    todo:       mockKanban.todo,
+    inprogress: mockKanban.inprogress,
+    done:       mockKanban.done,
+  });
+  const [pipeline] = useState(mockPipeline);
 
   const displayName = user?.displayName || user?.email?.split('@')[0] || 'Advisor';
   const hour = new Date().getHours();
@@ -28,6 +41,13 @@ export default function AgentDashboard() {
     }
   }, []);
 
+  // Compute dynamic KPI stats
+  const totalClients = 127; // Baseline mock number
+  const activeLeadsCount = (pipeline.lead || []).length + (pipeline.qualified || []).length;
+  const meetingsTodayCount = meetings.filter(m => m.date === selectedDate).length;
+  const pendingProposalsCount = (pipeline.proposal || []).length;
+  const closedCasesCount = (pipeline.closed || []).length;
+
   return (
     <div className={styles.page}>
       {/* Morning briefing modal */}
@@ -35,41 +55,99 @@ export default function AgentDashboard() {
         <MorningBriefingModal onClose={() => setShowBriefing(false)} />
       )}
 
-      {/* Page header */}
+      {/* Page Header greeting */}
       <div className={styles.pageHeader}>
         <div>
           <h1 className={styles.pageTitle}>{greeting}, {displayName}</h1>
           <p className={styles.pageDate}>{today}</p>
         </div>
         <button
-          className="btn btn-secondary btn-sm"
+          className={styles.briefingBtn}
           onClick={() => setShowBriefing(true)}
         >
-          📋 Morning Briefing
+          <Sparkles size={14} className={styles.sparkleIcon} />
+          <span>Morning Briefing</span>
         </button>
       </div>
 
-      {/* KPI cards */}
-      <section className={styles.section}>
-        <KPICardRow />
-      </section>
-
-      {/* Calendar + Reminders row */}
-      <section className={styles.section}>
-        <div className={styles.midGrid}>
-          <div className={styles.midLeft}>
-            <MeetingSchedule />
+      {/* Custom Dynamic KPI Row */}
+      <div className={styles.kpiRow}>
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiIconWrap} style={{ backgroundColor: '#eff6ff', color: '#1e40af' }}>
+            <Users size={16} />
           </div>
-          <div className={styles.midRight}>
-            <SmartReminderPanel />
+          <div>
+            <div className={styles.kpiValue}>{totalClients}</div>
+            <div className={styles.kpiLabel}>Total Clients</div>
           </div>
         </div>
-      </section>
 
-      {/* Kanban */}
-      <section className={styles.section}>
-        <KanbanBoard />
-      </section>
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiIconWrap} style={{ backgroundColor: '#fffbeb', color: '#b45309' }}>
+            <TrendingUp size={16} />
+          </div>
+          <div>
+            <div className={styles.kpiValue}>{activeLeadsCount}</div>
+            <div className={styles.kpiLabel}>Active Leads</div>
+          </div>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiIconWrap} style={{ backgroundColor: '#fdf2f8', color: '#9d174d' }}>
+            <Calendar size={16} />
+          </div>
+          <div>
+            <div className={styles.kpiValue}>{meetingsTodayCount}</div>
+            <div className={styles.kpiLabel}>Meetings Today</div>
+          </div>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiIconWrap} style={{ backgroundColor: '#f5f3ff', color: '#5b21b6' }}>
+            <FileText size={16} />
+          </div>
+          <div>
+            <div className={styles.kpiValue}>{pendingProposalsCount}</div>
+            <div className={styles.kpiLabel}>Pending Proposals</div>
+          </div>
+        </div>
+
+        <div className={styles.kpiCard}>
+          <div className={styles.kpiIconWrap} style={{ backgroundColor: '#ecfdf5', color: '#065f46' }}>
+            <CheckSquare size={16} />
+          </div>
+          <div>
+            <div className={styles.kpiValue}>{closedCasesCount}</div>
+            <div className={styles.kpiLabel}>Closed Cases</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Central Two-Column Command Center Workspace */}
+      <div className={styles.midGrid}>
+        {/* Left Column (65%) */}
+        <div className={styles.midLeft}>
+          <MeetingSchedule
+            selectedDate={selectedDate}
+            onSelectDate={setSelectedDate}
+            columns={columns}
+          />
+        </div>
+
+        {/* Right Column (35%) */}
+        <div className={styles.midRight}>
+          <SmartReminderPanel />
+        </div>
+      </div>
+
+      {/* Task Kanban Board */}
+      <div className={styles.kanbanSection}>
+        <KanbanBoard
+          selectedDate={selectedDate}
+          columns={columns}
+          setColumns={setColumns}
+        />
+      </div>
     </div>
   );
 }

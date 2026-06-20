@@ -5,6 +5,7 @@ import styles from './MorningBriefingModal.module.css';
 
 export default function MorningBriefingModal({ onClose }) {
   const [tab, setTab] = useState('meetings');
+  const todayMeetings = mockMeetings.filter(m => m.date === '2026-06-20');
 
   const urgencyIcon = (u) => {
     if (u === 'critical') return <AlertTriangle size={14} />;
@@ -54,12 +55,12 @@ export default function MorningBriefingModal({ onClose }) {
           {/* Meetings tab */}
           {tab === 'meetings' && (
             <div className={styles.timeline}>
-              {mockMeetings.map((m, i) => (
+              {todayMeetings.map((m, i) => (
                 <div key={m.id} className={styles.timelineItem}>
                   <div className={styles.timelineLeft}>
                     <span className={styles.timeLabel}>{m.time}</span>
                     <div className={`${styles.dot} ${styles[`dot_${m.type}`]}`} />
-                    {i < mockMeetings.length - 1 && <div className={styles.connector} />}
+                    {i < todayMeetings.length - 1 && <div className={styles.connector} />}
                   </div>
                   <div className={styles.timelineCard}>
                     <div className={styles.meetingClient}>{m.client}</div>

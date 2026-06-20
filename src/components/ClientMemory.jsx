@@ -1,10 +1,70 @@
-import { Brain, Users, Heart, CalendarDays, Eye, Star, Baby } from 'lucide-react';
+import { Brain, Users, Heart, CalendarDays, Eye, Star, Baby, Target, Sparkles, AlertTriangle, ShieldCheck } from 'lucide-react';
 
 const CATEGORY_CONFIG = {
   'Meeting Summary': { icon: CalendarDays, color: 'bg-blue-100 text-blue-600', dotColor: 'bg-blue-500' },
   'Advisor Observation': { icon: Eye, color: 'bg-violet-100 text-violet-600', dotColor: 'bg-violet-500' },
   'Client Preference': { icon: Star, color: 'bg-amber-100 text-amber-600', dotColor: 'bg-amber-500' },
   'Life Event': { icon: Baby, color: 'bg-emerald-100 text-emerald-600', dotColor: 'bg-emerald-500' },
+};
+
+// Client specific goals and insights data
+const CLIENT_INTELLIGENCE = {
+  'Sarah Lim': {
+    goals: [
+      { name: 'Retire Early by Age 50', target: '$1,500,000', progress: 65, status: 'On Track' },
+      { name: 'Children College Savings', target: '$300,000', progress: 40, status: 'Needs Boost' },
+      { name: 'Comprehensive Medical Buffer', target: '$500,000', progress: 90, status: 'Secured' }
+    ],
+    insights: {
+      opportunities: 'High interest in sustainable ESG funds. Suggest Allianz Malaysian ESG Growth Fund (expected 7.8% yield).',
+      concerns: 'Has a critical insurance gap of 30% in critical illness multiplier riders relative to family budget.',
+      priorities: 'Schedule education fund sign-off session. Check declarations on health application.'
+    }
+  },
+  'Marcus Chen': {
+    goals: [
+      { name: 'Estate Legacy Planning', target: '$3,000,000', progress: 30, status: 'Behind' },
+      { name: 'Passive Dividend Yield Portfolio', target: '$120k/yr', progress: 55, status: 'On Track' }
+    ],
+    insights: {
+      opportunities: 'Refinance commercial property mortgage via partner Speedy Mortgage. Free up cash flow.',
+      concerns: 'Extremely high risk profile but only carries a single term policy. No health umbrella.',
+      priorities: 'Schedule critical overdue review. Finalize will trust draft with legal team.'
+    }
+  },
+  'Priya Nair': {
+    goals: [
+      { name: 'First Property Down Payment', target: '$150,000', progress: 75, status: 'On Track' },
+      { name: 'Investment-Linked Growth Plan', target: '$300,000', progress: 30, status: 'Early Stage' }
+    ],
+    insights: {
+      opportunities: 'Convert standard saving scheme to high-yield unit trusts. Interest in digital assets.',
+      concerns: 'High medical expenses; deductible settings on insurance plans are set too high.',
+      priorities: 'Confirm hospital declarations document submission.'
+    }
+  },
+  'David Wong': {
+    goals: [
+      { name: 'Medical Business Expansion Fund', target: '$500,000', progress: 85, status: 'Secured' },
+      { name: 'Legacy Trust Allocation', target: '$2,000,000', progress: 50, status: 'On Track' }
+    ],
+    insights: {
+      opportunities: 'Tax relief optimization via retirement annuity plans. Introduce lawyer partner Bailiff & Co.',
+      concerns: 'Extremely busy surgeon schedule prevents regular contact, increasing policy churn risks.',
+      priorities: 'Follow up on medical declarations before the policy issue deadline.'
+    }
+  },
+  'Aisha Rahman': {
+    goals: [
+      { name: 'Family Medical Protection Fund', target: '$400,000', progress: 20, status: 'Behind' },
+      { name: 'Shariah Investment Growth', target: '$1,000,000', progress: 45, status: 'On Track' }
+    ],
+    insights: {
+      opportunities: 'Introduce Prudential Shariah-compliant ILP scheme for high-yield returns.',
+      concerns: 'Low compliance documentation score; recent contact lapse has delayed plan updates.',
+      priorities: 'Organize maternity cover checklist before child delivery.'
+    }
+  }
 };
 
 export default function ClientMemory({ client }) {
@@ -16,7 +76,7 @@ export default function ClientMemory({ client }) {
     );
   }
 
-  // Reconstruct the snapshot preferences dynamically from client fields
+  // Reconstruct preferences dynamically
   const preferences = [];
   if (client.specialPreferences?.birthday) {
     preferences.push(`Birthday: ${client.specialPreferences.birthday}`);
@@ -32,11 +92,23 @@ export default function ClientMemory({ client }) {
     preferences.push('No preferences recorded');
   }
 
+  const intel = CLIENT_INTELLIGENCE[client.name] || {
+    goals: [
+      { name: 'General Financial Security', target: 'N/A', progress: 50, status: 'On Track' }
+    ],
+    insights: {
+      opportunities: 'Introduce primary medical health riders.',
+      concerns: 'No review recorded in 90 days.',
+      priorities: 'Verify basic onboarding documents.'
+    }
+  };
+
   const summary = client.memorySummary || client.needsSummary || 'No AI Client Memory summary available yet.';
   const timeline = client.memoryTimeline || [];
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-6">
+      
       {/* Client Snapshot */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-card overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
@@ -77,13 +149,81 @@ export default function ClientMemory({ client }) {
         </div>
       </div>
 
+      {/* Financial Goals & Wealth Plan */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-card overflow-hidden">
+        <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+          <Target size={16} className="text-aag-primary" />
+          <h3 className="text-sm font-semibold text-gray-900">Wealth & Financial Goals</h3>
+        </div>
+        
+        <div className="p-5 space-y-4">
+          {intel.goals.map((goal, idx) => (
+            <div key={idx} className="space-y-1.5">
+              <div className="flex justify-between text-sm">
+                <span className="font-semibold text-gray-800">{goal.name}</span>
+                <span className="text-gray-500 font-medium">{goal.target} · <span className="text-aag-primary-light font-bold">{goal.status}</span></span>
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="flex-1 h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                  <div 
+                    className="h-full rounded-full transition-all duration-500" 
+                    style={{ 
+                      width: `${goal.progress}%`,
+                      backgroundColor: goal.progress >= 80 ? '#10b981' : goal.progress >= 50 ? '#f59e0b' : '#dc2626'
+                    }} 
+                  />
+                </div>
+                <span className="text-xs font-bold text-gray-600 w-8 text-right">{goal.progress}%</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* AI Recommendations & Insights Panel */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-card overflow-hidden">
+        <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
+          <Sparkles size={16} className="text-aag-primary" />
+          <h3 className="text-sm font-semibold text-gray-900">AI Recommendation & Insights</h3>
+        </div>
+        
+        <div className="p-5 grid sm:grid-cols-3 gap-4">
+          {/* Opportunities */}
+          <div className="bg-emerald-50/50 border border-emerald-100 rounded-lg p-4">
+            <h4 className="text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <ShieldCheck size={14} />
+              Opportunities
+            </h4>
+            <p className="text-sm text-emerald-950 leading-relaxed">{intel.insights.opportunities}</p>
+          </div>
+
+          {/* Concerns */}
+          <div className="bg-rose-50/50 border border-rose-100 rounded-lg p-4">
+            <h4 className="text-xs font-bold text-rose-800 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <AlertTriangle size={14} />
+              Concerns
+            </h4>
+            <p className="text-sm text-rose-950 leading-relaxed">{intel.insights.concerns}</p>
+          </div>
+
+          {/* Priorities */}
+          <div className="bg-amber-50/50 border border-amber-100 rounded-lg p-4">
+            <h4 className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+              <Brain size={14} />
+              Priorities
+            </h4>
+            <p className="text-sm text-amber-950 leading-relaxed">{intel.insights.priorities}</p>
+          </div>
+        </div>
+      </div>
+
       {/* AI Memory Summary */}
       <div className="bg-white rounded-xl border border-gray-200 shadow-card overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2">
           <Brain size={16} className="text-aag-primary" />
           <h3 className="text-sm font-semibold text-gray-900">AI Client Memory</h3>
           <span className="ml-auto inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-aag-accent text-aag-primary text-[0.65rem] font-semibold">
-            <span className="w-1.5 h-1.5 rounded-full bg-aag-primary animate-pulse-slow" />
+            <span className="w-1.5 h-1.5 rounded-full bg-aag-primary animate-pulse" />
             RAG Powered
           </span>
         </div>
