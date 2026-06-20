@@ -43,13 +43,13 @@ export default function LoginPage() {
       <div className={styles.brandPanel}>
         <div className={styles.brandOverlay} />
         <div className={styles.brandContent}>
-          <img
-            src="/AAG_logo.png"
-            alt="Advisors Alliance Group"
-            className={styles.brandLogo}
-            onError={e => { e.target.onerror=null; e.target.src='/AAG_logo.svg'; }}
-          />
           <div className={styles.brandText}>
+            <img
+              src="/AAG_logo.png"
+              alt="Advisors Alliance Group"
+              className={styles.brandLogo}
+              onError={e => { e.target.onerror=null; e.target.src='/AAG_logo.svg'; }}
+            />
             <h1 className={styles.brandTagline}>
               <em>Impacting Lives,</em><br />
               <em>Always.</em>

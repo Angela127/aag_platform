@@ -54,11 +54,13 @@
 }
 
 .brandLogo {
-  height: 52px;
+  height: 150px;
   width: auto;
   object-fit: contain;
   filter: brightness(0) invert(1);
   opacity: .95;
+  margin-bottom: 32px;
+  align-self: flex-start;
 }
 
 .brandText {
