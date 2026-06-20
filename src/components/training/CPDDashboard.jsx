@@ -8,8 +8,8 @@ import styles from './CPDDashboard.module.css';
 // Animated SVG donut ring
 function CPDRing({ earned, required }) {
   const pct = Math.min(earned / required, 1);
-  const size = 200;
-  const stroke = 18;
+  const size = 170;
+  const stroke = 12;
   const r = (size - stroke) / 2;
   const circ = 2 * Math.PI * r;
   const dashOffset = circ * (1 - pct);
@@ -17,26 +17,36 @@ function CPDRing({ earned, required }) {
   return (
     <div className={styles.ringWrapper}>
       <svg width={size} height={size} className={styles.ringSvg}>
+        <defs>
+          <linearGradient id="cpdGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#d23c40" />
+            <stop offset="100%" stopColor="var(--aag-primary)" />
+          </linearGradient>
+          <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="var(--aag-primary)" floodOpacity="0.2" />
+          </filter>
+        </defs>
         {/* Background track */}
         <circle
           cx={size / 2} cy={size / 2} r={r}
-          fill="none" stroke="#f0ede8" strokeWidth={stroke}
+          fill="none" stroke="#f2efea" strokeWidth={stroke - 4}
         />
         {/* Progress arc */}
         <circle
           cx={size / 2} cy={size / 2} r={r}
-          fill="none" stroke="var(--aag-primary)" strokeWidth={stroke}
+          fill="none" stroke="url(#cpdGradient)" strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={circ}
           strokeDashoffset={dashOffset}
           transform={`rotate(-90 ${size / 2} ${size / 2})`}
           className={styles.ringArc}
+          filter="url(#shadow)"
         />
       </svg>
       <div className={styles.ringCenter}>
+        <span className={styles.ringPct}>{Math.round(pct * 100)}%</span>
         <span className={styles.ringEarned}>{earned}</span>
         <span className={styles.ringLabel}>of {required} hrs</span>
-        <span className={styles.ringPct}>{Math.round(pct * 100)}%</span>
       </div>
     </div>
   );
@@ -47,13 +57,18 @@ function CategoryBar({ cat, earned }) {
   return (
     <div className={styles.catRow}>
       <div className={styles.catHeader}>
-        <span className={styles.catLabel}>{cat.label}</span>
-        <span className={styles.catHours}>{earned} / {cat.required} hrs</span>
+        <div className={styles.catNameGroup}>
+          <span className={styles.catDot} style={{ background: cat.color }} />
+          <span className={styles.catLabel}>{cat.label}</span>
+        </div>
+        <span className={styles.catHours}>
+          <strong>{earned}</strong> <span className={styles.hoursSlash}>/</span> {cat.required} hrs
+        </span>
       </div>
       <div className={styles.catTrack}>
         <div
           className={styles.catFill}
-          style={{ width: `${pct}%`, background: cat.color }}
+          style={{ width: `${pct}%`, background: `linear-gradient(90deg, ${cat.color}bb, ${cat.color})` }}
         />
       </div>
     </div>
@@ -62,21 +77,23 @@ function CategoryBar({ cat, earned }) {
 
 function ExpiryAlert({ cert }) {
   const colorMap = {
-    danger:  { bg: 'var(--danger-bg)',  border: '#fca5a5', icon: '#dc2626', IconComp: AlertTriangle },
-    warning: { bg: 'var(--warning-bg)', border: '#fcd34d', icon: '#d97706', IconComp: AlertCircle   },
-    info:    { bg: 'var(--info-bg)',    border: '#93c5fd', icon: '#1d5ea8', IconComp: Clock          },
+    danger:  { indicator: '#dc2626', icon: '#dc2626', bg: '#fef2f2', IconComp: AlertTriangle },
+    warning: { indicator: '#d97706', icon: '#d97706', bg: '#fffbeb', IconComp: AlertCircle   },
+    info:    { indicator: '#1d5ea8', icon: '#1d5ea8', bg: '#eff6ff', IconComp: Clock          },
   };
-  const { bg, border, icon, IconComp } = colorMap[cert.severity];
+  const { indicator, icon, bg, IconComp } = colorMap[cert.severity] || colorMap.info;
   return (
-    <div className={styles.alert} style={{ background: bg, borderColor: border }}>
-      <IconComp size={16} style={{ color: icon, flexShrink: 0 }} />
+    <div className={styles.alertCardItem} style={{ borderLeftColor: indicator }}>
+      <div className={styles.alertIconBadge} style={{ backgroundColor: bg }}>
+        <IconComp size={16} style={{ color: icon }} />
+      </div>
       <div className={styles.alertBody}>
         <span className={styles.alertTitle}>{cert.name}</span>
         <span className={styles.alertSub}>
-          Expires in <strong>{cert.expiresInDays} days</strong> — renew now to maintain compliance
+          Expires in <strong style={{ color: indicator }}>{cert.expiresInDays} days</strong>
         </span>
       </div>
-      <button className={`btn btn-sm ${styles.renewBtn}`}>Renew</button>
+      <button className={styles.renewBtnPill}>Renew</button>
     </div>
   );
 }
@@ -92,58 +109,60 @@ export default function CPDDashboard() {
       {/* ── Top row: ring + category bars ── */}
       <div className={styles.topGrid}>
         {/* Donut ring card */}
-        <div className={`card ${styles.ringCard}`}>
-          <div className="card-header">
+        <div className={styles.ringCard}>
+          <div className={styles.cardHeaderCustom}>
             <h3>CPD Progress</h3>
-            <span className="badge badge-red">FY 2026</span>
+            <span className={styles.badgeRed}>FY 2026</span>
           </div>
-          <div className={`card-body ${styles.ringBody}`}>
+          <div className={styles.ringBody}>
             <CPDRing earned={cpdEarned} required={cpdRequired} />
-            <div className={styles.ringStats}>
-              <div className={styles.statPill}>
-                <CheckCircle size={14} style={{ color: 'var(--success)' }} />
-                <span>{cpdEarned} hrs earned</span>
+            <div className={styles.ringStatsGrid}>
+              <div className={styles.statCardEarned}>
+                <div className={styles.statIconEarned}>
+                  <CheckCircle size={15} />
+                </div>
+                <div>
+                  <div className={styles.statValue}>{cpdEarned} hrs</div>
+                  <div className={styles.statLabel}>Completed</div>
+                </div>
               </div>
-              <div className={styles.statPill}>
-                <Clock size={14} style={{ color: 'var(--warning)' }} />
-                <span>{Math.max(0, cpdRequired - cpdEarned)} hrs remaining</span>
+              <div className={styles.statCardRemaining}>
+                <div className={styles.statIconRemaining}>
+                  <Clock size={15} />
+                </div>
+                <div>
+                  <div className={styles.statValue}>{Math.max(0, cpdRequired - cpdEarned)} hrs</div>
+                  <div className={styles.statLabel}>Remaining</div>
+                </div>
               </div>
             </div>
-            <p className={styles.ringNote}>
-              CPD deadline: <strong>31 December 2026</strong>
-            </p>
+            <div className={styles.deadlineInfo}>
+              Deadline: <strong>31 December 2026</strong>
+            </div>
           </div>
         </div>
 
         {/* Category breakdown */}
-        <div className={`card ${styles.catCard}`}>
-          <div className="card-header">
+        <div className={styles.catCard}>
+          <div className={styles.cardHeaderCustom}>
             <h3>Breakdown by Category</h3>
           </div>
-          <div className="card-body">
+          <div className={styles.catBody}>
             <div className={styles.catList}>
               {CPD_CATEGORIES.map(cat => (
                 <CategoryBar key={cat.id} cat={cat} earned={categoryHours[cat.id] ?? 0} />
-              ))}
-            </div>
-            <div className={styles.catLegend}>
-              {CPD_CATEGORIES.map(cat => (
-                <div key={cat.id} className={styles.legendItem}>
-                  <span className={styles.legendDot} style={{ background: cat.color }} />
-                  {cat.label}
-                </div>
               ))}
             </div>
           </div>
         </div>
 
         {/* Expiring alerts */}
-        <div className={`card ${styles.alertCard}`}>
-          <div className="card-header">
+        <div className={styles.alertCard}>
+          <div className={styles.cardHeaderCustom}>
             <h3>Expiring Certifications</h3>
-            <span className="badge badge-red">{EXPIRING_CERTS.length} alerts</span>
+            <span className={styles.badgeRedCount}>{EXPIRING_CERTS.length} alerts</span>
           </div>
-          <div className={`card-body ${styles.alertList}`}>
+          <div className={styles.alertList}>
             {EXPIRING_CERTS.map(cert => (
               <ExpiryAlert key={cert.id} cert={cert} />
             ))}
@@ -152,8 +171,8 @@ export default function CPDDashboard() {
       </div>
 
       {/* ── Activity Log ── */}
-      <div className={`card ${styles.logCard}`}>
-        <div className="card-header">
+      <div className={styles.logCard}>
+        <div className={styles.cardHeaderCustom}>
           <h3>Recent CPD Activity</h3>
           <span className={styles.logTotal}>+{cpdActivity.reduce((s, a) => s + a.hours, 0).toFixed(1)} hrs this period</span>
         </div>
@@ -162,11 +181,11 @@ export default function CPDDashboard() {
             <table className={styles.logTable}>
               <thead>
                 <tr>
-                  <th>Activity</th>
+                  <th style={{ paddingLeft: '24px' }}>Activity</th>
                   <th>Type</th>
                   <th>Category</th>
                   <th>Date</th>
-                  <th style={{ textAlign: 'right' }}>CPD Hours</th>
+                  <th style={{ textAlign: 'right', paddingRight: '24px' }}>CPD Hours</th>
                 </tr>
               </thead>
               <tbody>
@@ -174,7 +193,7 @@ export default function CPDDashboard() {
                   const Icon = typeIcon[a.type] || BookOpen;
                   return (
                     <tr key={a.id} className={styles.logRow}>
-                      <td>
+                      <td style={{ paddingLeft: '24px' }}>
                         <div className={styles.logTitle}>
                           <Icon size={14} />
                           {a.title}
@@ -193,7 +212,7 @@ export default function CPDDashboard() {
                       <td className={styles.logDate}>
                         {new Date(a.date).toLocaleDateString('en-SG', { day: 'numeric', month: 'short', year: 'numeric' })}
                       </td>
-                      <td style={{ textAlign: 'right' }}>
+                      <td style={{ textAlign: 'right', paddingRight: '24px' }}>
                         <span className={styles.logHrs}>+{a.hours}h</span>
                       </td>
                     </tr>
