@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Edit3, MessageSquare, Briefcase, Loader2, AlertTriangle } from 'lucide-react';
 import { db } from '../lib/firebase.js';
-import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, arrayUnion, collection, getDocs } from 'firebase/firestore';
 import HealthScore from '../components/HealthScore.jsx';
+import ProfileSimilarity from '../components/ProfileSimilarity.jsx';
 import ClientMemory from '../components/ClientMemory.jsx';
 import MemoryChat from '../components/MemoryChat.jsx';
 import PolicyCard from '../components/PolicyCard.jsx';
@@ -33,28 +34,55 @@ export default function ClientDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [client, setClient] = useState(null);
+  const [allClients, setAllClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  // Fetch client details from Firestore customers collection
+  // Fetch client details and all other clients from Firestore customers collection
   useEffect(() => {
-    async function fetchClient() {
+    let isMounted = true;
+    async function fetchData() {
       try {
+        setLoading(true);
+        // 1. Fetch current client details
         const docRef = doc(db, 'customers', id);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-          setClient({ id: docSnap.id, ...docSnap.data() });
+          if (isMounted) {
+            setClient({ id: docSnap.id, ...docSnap.data() });
+          }
         } else {
-          setError('Client profile not found in database.');
+          if (isMounted) {
+            setError('Client profile not found in database.');
+          }
+        }
+
+        // 2. Fetch all other clients for similarity matching
+        const querySnapshot = await getDocs(collection(db, 'customers'));
+        const clientsList = [];
+        querySnapshot.forEach((docVal) => {
+          if (docVal.id !== id) {
+            clientsList.push({ id: docVal.id, ...docVal.data() });
+          }
+        });
+        if (isMounted) {
+          setAllClients(clientsList);
         }
       } catch (err) {
-        console.error('Error fetching client details:', err);
-        setError('Failed to load client details.');
+        console.error('Error fetching client details/all clients:', err);
+        if (isMounted) {
+          setError('Failed to load client details.');
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     }
-    fetchClient();
+    fetchData();
+    return () => {
+      isMounted = false;
+    };
   }, [id]);
 
   const handleAddExpense = async (newExpense) => {
@@ -253,6 +281,9 @@ export default function ClientDetail() {
         <div className="space-y-6">
           {/* Health Score */}
           <HealthScore client={client} />
+
+          {/* Profile Similarity Insights */}
+          <ProfileSimilarity currentClient={client} allClients={allClients} />
 
           {/* Follow-ups */}
           <FollowUpCard
