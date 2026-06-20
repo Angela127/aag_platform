@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Edit3, MessageSquare, Briefcase, Loader2, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, Edit3, MessageSquare, Briefcase, Loader2, AlertTriangle, FileText, Brain, Users, CheckCircle2, X } from 'lucide-react';
 import { db } from '../lib/firebase.js';
 import { doc, getDoc, updateDoc, arrayUnion } from 'firebase/firestore';
 import HealthScore from '../components/HealthScore.jsx';
@@ -9,7 +9,10 @@ import MemoryChat from '../components/MemoryChat.jsx';
 import PolicyCard from '../components/PolicyCard.jsx';
 import ExpenseTracker from '../components/ExpenseTracker.jsx';
 import FollowUpCard from '../components/FollowUpCard.jsx';
-import ChatPanel from '../components/ChatPanel.jsx';
+import EditClientModal from '../components/EditClientModal.jsx';
+import QuestionnaireUpload from '../components/QuestionnaireUpload.jsx';
+import QuestionnaireReviewForm from '../components/QuestionnaireReviewForm.jsx';
+import { extractQuestionnaireData } from '../utils/questionnaireExtraction.js';
 
 function getAvatarColor(name) {
   const colors = [
@@ -35,6 +38,153 @@ export default function ClientDetail() {
   const [client, setClient] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [activeTab, setActiveTab] = useState('snapshot');
+  const [isExtracting, setIsExtracting] = useState(false);
+  const [extractionData, setExtractionData] = useState(null);
+  const [isReviewing, setIsReviewing] = useState(false);
+  const [toast, setToast] = useState(null);
+
+  const showNotification = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => {
+      setToast(prev => {
+        if (prev && prev.message === message) {
+          return null;
+        }
+        return prev;
+      });
+    }, 4000);
+  };
+
+  const handleExtractionSuccess = async (rawText, filename) => {
+    try {
+      setIsExtracting(true);
+      const extracted = await extractQuestionnaireData(rawText, client.name);
+      setExtractionData(extracted);
+      setIsReviewing(true);
+    } catch (err) {
+      console.error("Extraction process failed:", err);
+      showNotification("Failed to parse extracted PDF text. Please check console.", "error");
+    } finally {
+      setIsExtracting(false);
+    }
+  };
+
+  const handleSaveQuestionnaire = async (formData) => {
+    try {
+      const today = new Date();
+      const formattedDate = `${today.getDate()} ${today.toLocaleString('en-US', { month: 'short' })} ${today.getFullYear()}`;
+      const newTimelineEvent = {
+        date: formattedDate,
+        category: 'Life Event',
+        description: 'Fact-Find Completed — Questionnaire submitted and processed.'
+      };
+
+      // Map questionnaire formData fields to root fields of the client document
+      const rootUpdates = {
+        nationality: formData.personalInfo?.nationality || '',
+        maritalStatus: formData.personalInfo?.maritalStatus || '',
+        gender: formData.personalInfo?.gender || '',
+        mobileNumber: formData.personalInfo?.mobileNumbers?.[0] || '',
+        dob: formData.personalInfo?.dateOfBirth || '',
+        
+        industry: formData.employmentInfo?.industry || '',
+        yearsExperience: formData.employmentInfo?.yearsOfExperience || 0,
+        employmentStatus: formData.employmentInfo?.employmentStatus || '',
+        occupation: formData.employmentInfo?.occupation || '',
+        companyName: formData.employmentInfo?.companyName || '',
+        
+        numDependents: formData.familyInfo?.numberOfDependents || 0,
+        anyFamilyDependent: formData.familyInfo?.financiallyDependentMembers || 'No',
+        familyDetails: formData.familyInfo?.summary || '',
+        
+        estimatedInvestableAssets: formData.financialInfo?.estimatedInvestableAssets || '',
+        financialGoals: formData.financialInfo?.financialGoals || [],
+        annualIncomeRange: formData.financialInfo?.annualIncomeRange || '',
+        
+        preferredLanguage: formData.communicationPreferences?.preferredLanguage || '',
+        preferredConsultation: formData.communicationPreferences?.preferredConsultation || '',
+      };
+
+      const docRef = doc(db, 'customers', id);
+      await updateDoc(docRef, {
+        ...rootUpdates,
+        questionnaire: formData,
+        memoryTimeline: arrayUnion(newTimelineEvent)
+      });
+
+      // Sync local state
+      setClient(prev => ({
+        ...prev,
+        ...rootUpdates,
+        questionnaire: formData,
+        memoryTimeline: [...(prev.memoryTimeline || []), newTimelineEvent]
+      }));
+
+      setIsReviewing(false);
+      setExtractionData(null);
+      
+      // Popup success notification
+      showNotification("Fact-find questionnaire uploaded and client snapshot updated successfully!", "success");
+      // Switch back to snapshot tab
+      setActiveTab('snapshot');
+    } catch (err) {
+      console.error("Error saving questionnaire:", err);
+      showNotification("Failed to save questionnaire data.", "error");
+    }
+  };
+
+  const handleUpdateClient = async (updatedData) => {
+    try {
+      const docRef = doc(db, 'customers', id);
+      await updateDoc(docRef, updatedData);
+      
+      // Synchronize with questionnaires collection if it exists
+      try {
+        const questRef = doc(db, 'questionnaires', id);
+        const questSnap = await getDoc(questRef);
+        if (questSnap.exists()) {
+          const questPayload = {
+            nationality: updatedData.nationality,
+            maritalStatus: updatedData.maritalStatus,
+            gender: updatedData.gender,
+            mobileNumber: updatedData.mobileNumber,
+            dob: updatedData.dob,
+            industry: updatedData.industry,
+            yearsExperience: updatedData.yearsExperience,
+            employmentStatus: updatedData.employmentStatus,
+            occupation: updatedData.occupation,
+            companyName: updatedData.companyName,
+            numDependents: updatedData.numDependents,
+            anyFamilyDependent: updatedData.anyFamilyDependent,
+            familyDetails: updatedData.familyDetails,
+            spouseName: updatedData.spouseName,
+            childrenAges: updatedData.childrenAges,
+            estimatedInvestableAssets: updatedData.estimatedInvestableAssets,
+            financialGoals: updatedData.financialGoals,
+            annualIncomeRange: updatedData.annualIncomeRange,
+            preferredLanguage: updatedData.preferredLanguage,
+            preferredConsultation: updatedData.preferredConsultation,
+            updatedAt: new Date()
+          };
+          await updateDoc(questRef, questPayload);
+          console.log("Questionnaire document successfully synchronized.");
+        }
+      } catch (questErr) {
+        console.log("Questionnaire sync skipped:", questErr.message);
+      }
+
+      setClient((prev) => ({
+        ...prev,
+        ...updatedData
+      }));
+      setShowEditModal(false);
+    } catch (err) {
+      console.error('Error saving client edits:', err);
+      showNotification('Failed to save client changes to the database.', 'error');
+    }
+  };
 
   // Fetch client details from Firestore customers collection
   useEffect(() => {
@@ -70,7 +220,7 @@ export default function ClientDetail() {
       }));
     } catch (err) {
       console.error('Error adding expense to Firestore:', err);
-      alert('Failed to add expense to database.');
+      showNotification('Failed to add expense to database.', 'error');
     }
   };
 
@@ -104,7 +254,7 @@ export default function ClientDetail() {
       }));
     } catch (err) {
       console.error('Error toggling follow-up in Firestore:', err);
-      alert('Failed to update follow-up task.');
+      showNotification('Failed to update follow-up task.', 'error');
     }
   };
 
@@ -133,7 +283,7 @@ export default function ClientDetail() {
       }));
     } catch (err) {
       console.error('Error adding follow-up to Firestore:', err);
-      alert('Failed to add follow-up task to database.');
+      showNotification('Failed to add follow-up task to database.', 'error');
     }
   };
 
@@ -216,6 +366,7 @@ export default function ClientDetail() {
           <div className="flex items-center gap-2.5">
             <button
               id="edit-client-btn"
+              onClick={() => setShowEditModal(true)}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 transition-all cursor-pointer"
             >
               <Edit3 size={14} />
@@ -232,21 +383,86 @@ export default function ClientDetail() {
         </div>
       </div>
 
+      {/* Top Row: Snapshot / Questionnaire Tabbed Card (1/2) and AI Client Memory (1/2) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        {/* Tabbed Card: Client Snapshot / Upload Questionnaire */}
+        <div className="bg-white rounded-xl border border-gray-200 shadow-card overflow-hidden flex flex-col min-h-[300px] lg:h-[300px]">
+          {/* Decorative top subtle gradient bar */}
+          <div className="h-0.5 bg-gradient-to-r from-aag-primary via-aag-primary-light to-aag-accent" />
+          
+          {/* Tabs Header */}
+          <div className="border-b border-gray-100 flex items-center bg-gray-50/30">
+            <button
+              onClick={() => setActiveTab('snapshot')}
+              className={`px-5 py-3 font-bold text-xs flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
+                activeTab === 'snapshot'
+                  ? 'border-b-aag-primary text-aag-primary bg-white'
+                  : 'border-b-transparent text-gray-500 hover:text-gray-900 hover:bg-gray-50/50'
+              }`}
+            >
+              <Users size={14} className="text-aag-primary" />
+              Client Snapshot
+            </button>
+            <button
+              onClick={() => setActiveTab('questionnaire')}
+              className={`px-5 py-3 font-bold text-xs flex items-center gap-2 border-b-2 transition-all cursor-pointer ${
+                activeTab === 'questionnaire'
+                  ? 'border-b-aag-primary text-aag-primary bg-white'
+                  : 'border-b-transparent text-gray-500 hover:text-gray-900 hover:bg-gray-50/50'
+              }`}
+            >
+              <FileText size={14} />
+              Upload Questionnaire
+            </button>
+          </div>
+
+          {/* Tab Content */}
+          <div className="flex-grow flex flex-col min-h-0">
+            {activeTab === 'snapshot' ? (
+              <ClientMemory client={client} section="snapshot" hideShell={true} />
+            ) : (
+              <div className="p-4 flex-grow flex flex-col min-h-0">
+                {isReviewing && extractionData ? (
+                  <QuestionnaireReviewForm
+                    initialData={extractionData}
+                    onSave={handleSaveQuestionnaire}
+                    onCancel={() => {
+                      setIsReviewing(false);
+                      setExtractionData(null);
+                    }}
+                  />
+                ) : (
+                  <QuestionnaireUpload
+                    onExtractionStart={() => setIsExtracting(true)}
+                    onExtractionSuccess={handleExtractionSuccess}
+                    onExtractionError={(err) => {
+                      setIsExtracting(false);
+                      showNotification(err, 'error');
+                    }}
+                    isExtracting={isExtracting}
+                  />
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* AI Client Memory (RAG) */}
+        <ClientMemory client={client} section="ai-memory" />
+      </div>
+
       {/* Main Content Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left / Main Column (2/3) */}
+        {/* Left Column (2/3) */}
         <div className="lg:col-span-2 space-y-6">
-          {/* AI Client Memory */}
-          <ClientMemory client={client} />
+          {/* Active Plans & Policies */}
+          <PolicyCard plans={client.plans} />
+
+          {/* Memory Timeline */}
+          <ClientMemory client={client} section="timeline" />
 
           {/* RAG Q&A Chat */}
           <MemoryChat client={client} />
-
-          {/* Active Plans */}
-          <PolicyCard plans={client.plans} />
-
-          {/* Expense Tracker */}
-          <ExpenseTracker initialExpenses={client.expenses} onAddExpense={handleAddExpense} />
         </div>
 
         {/* Right / Sidebar Column (1/3) */}
@@ -261,10 +477,51 @@ export default function ClientDetail() {
             onAddFollowUp={handleAddFollowUp}
           />
 
-          {/* Chat Panel */}
-          <ChatPanel client={client} />
+          {/* Expense Tracker */}
+          <ExpenseTracker initialExpenses={client.expenses} onAddExpense={handleAddExpense} />
         </div>
       </div>
+
+      {/* Edit Client Modal */}
+      <EditClientModal
+        client={client}
+        isOpen={showEditModal}
+        onClose={() => setShowEditModal(false)}
+        onSave={handleUpdateClient}
+      />
+
+      {/* Toast Notification */}
+      {toast && (
+        <div 
+          style={{
+            position: 'fixed',
+            top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 99999,
+          }}
+          className="animate-slideup"
+        >
+          <div className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border text-sm font-medium transition-all ${
+            toast.type === 'success'
+              ? 'bg-emerald-50 border-emerald-200 text-emerald-800'
+              : 'bg-rose-50 border-rose-200 text-rose-800'
+          }`}>
+            {toast.type === 'success' ? (
+              <CheckCircle2 size={18} className="text-emerald-600 shrink-0" />
+            ) : (
+              <AlertTriangle size={18} className="text-rose-600 shrink-0" />
+            )}
+            <span>{toast.message}</span>
+            <button
+              onClick={() => setToast(null)}
+              className="ml-2 hover:opacity-75 text-gray-400 cursor-pointer transition-opacity"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

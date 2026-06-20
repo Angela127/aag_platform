@@ -54,9 +54,19 @@ function buildSystemPrompt(client) {
   parts.push(
     `You are the AI Memory Assistant for the AAG Advisor Intelligence Platform.`,
     `Your role is to help financial advisors by answering questions about their clients based on the structured client data provided below.`,
-    `Always respond in a professional, concise, and helpful tone. Use specific data points (dates, amounts, names) when available.`,
-    `If the data does not contain enough information to answer a question, say so honestly and suggest what the advisor could do next.`,
-    `Never fabricate data that is not present in the context below.\n`,
+    ``,
+    `## Response Guidelines`,
+    `- Always provide **detailed, comprehensive answers** — never respond with just a single sentence.`,
+    `- Structure your responses using **bold headings**, bullet points, and clear sections.`,
+    `- Use specific data points (dates, amounts, names, plan details) when available.`,
+    `- When discussing a client's situation, provide context, analysis, and actionable recommendations.`,
+    `- Use markdown formatting: **bold** for emphasis, bullet lists with "- " for key points.`,
+    `- If asked about preferences, list ALL known preferences with details.`,
+    `- If asked about plans, include premium, coverage, and renewal details.`,
+    `- If asked about follow-ups, include priority levels and due dates.`,
+    `- End responses with a brief actionable suggestion or next step when appropriate.`,
+    `- If the data does not contain enough information, say so honestly and suggest what the advisor could gather next.`,
+    `- Never fabricate data that is not present in the context below.\n`,
   );
 
   // --- Client Profile ---
@@ -69,10 +79,65 @@ function buildSystemPrompt(client) {
   parts.push(`- **Last Contact:** ${client.lastContact}`);
   parts.push(`- **Active Plans:** ${client.activePlans}`);
   parts.push(`- **Family:** ${client.familyDetails}`);
+  if (client.maritalStatus) parts.push(`- **Marital Status:** ${client.maritalStatus}`);
+  if (client.nationality) parts.push(`- **Nationality:** ${client.nationality}`);
+  if (client.dob) parts.push(`- **Date of Birth:** ${client.dob}`);
+  if (client.gender) parts.push(`- **Gender:** ${client.gender}`);
+  if (client.mobileNumber) parts.push(`- **Mobile Number:** ${client.mobileNumber}`);
+  if (client.employmentStatus) parts.push(`- **Employment Status:** ${client.employmentStatus}`);
+  if (client.companyName) parts.push(`- **Company Name:** ${client.companyName}`);
+  if (client.industry) parts.push(`- **Industry:** ${client.industry}`);
+  if (client.yearsExperience) parts.push(`- **Years of Experience:** ${client.yearsExperience}`);
+  if (client.numDependents !== undefined) parts.push(`- **Number of Dependents:** ${client.numDependents}`);
+  if (client.spouseName) parts.push(`- **Spouse Name:** ${client.spouseName}`);
+  if (client.childrenAges) parts.push(`- **Children's Ages:** ${client.childrenAges}`);
+  if (client.anyFamilyDependent) parts.push(`- **Any Family Dependent:** ${client.anyFamilyDependent}`);
+  if (client.estimatedInvestableAssets) parts.push(`- **Estimated Investable Assets:** ${client.estimatedInvestableAssets}`);
+  if (client.annualIncomeRange) parts.push(`- **Annual Income Range:** ${client.annualIncomeRange}`);
+  if (client.financialGoals?.length) parts.push(`- **Financial Goals:** ${client.financialGoals.join(', ')}`);
+  if (client.preferredLanguage) parts.push(`- **Preferred Language:** ${client.preferredLanguage}`);
+  if (client.preferredConsultation) parts.push(`- **Preferred Consultation:** ${client.preferredConsultation}`);
+  if (client.lifeStage) parts.push(`- **Life Stage / Goal:** ${client.lifeStage}`);
+  if (client.nextImportantDateLabel) parts.push(`- **Next Important Event:** ${client.nextImportantDateLabel} (${client.nextImportantDate || 'No Date'})`);
+  if (client.specialPreferences?.length) parts.push(`- **Special Preferences:** ${client.specialPreferences.join(', ')}`);
 
-  if (client.specialPreferences) {
-    parts.push(`- **Birthday:** ${client.specialPreferences.birthday}`);
-    parts.push(`- **Notes:** ${client.specialPreferences.notes}`);
+  // --- Fact-Find Questionnaire ---
+  if (client.questionnaire) {
+    const q = client.questionnaire;
+    parts.push(`\n## Fact-Find Questionnaire Data`);
+    if (q.personalInfo) {
+      parts.push(`### Personal Info`);
+      if (q.personalInfo.nationality) parts.push(`- Nationality: ${q.personalInfo.nationality}`);
+      if (q.personalInfo.maritalStatus) parts.push(`- Marital Status: ${q.personalInfo.maritalStatus}`);
+      if (q.personalInfo.gender) parts.push(`- Gender: ${q.personalInfo.gender}`);
+      if (q.personalInfo.dateOfBirth) parts.push(`- Date of Birth: ${q.personalInfo.dateOfBirth}`);
+      if (q.personalInfo.mobileNumbers?.length) parts.push(`- Mobile Numbers: ${q.personalInfo.mobileNumbers.filter(Boolean).join(', ')}`);
+    }
+    if (q.employmentInfo) {
+      parts.push(`### Employment Info`);
+      if (q.employmentInfo.occupation) parts.push(`- Occupation: ${q.employmentInfo.occupation}`);
+      if (q.employmentInfo.companyName) parts.push(`- Company Name: ${q.employmentInfo.companyName}`);
+      if (q.employmentInfo.industry) parts.push(`- Industry: ${q.employmentInfo.industry}`);
+      if (q.employmentInfo.employmentStatus) parts.push(`- Employment Status: ${q.employmentInfo.employmentStatus}`);
+      if (q.employmentInfo.yearsOfExperience) parts.push(`- Years of Experience: ${q.employmentInfo.yearsOfExperience}`);
+    }
+    if (q.familyInfo) {
+      parts.push(`### Family Info`);
+      if (q.familyInfo.numberOfDependents !== undefined) parts.push(`- Number of Dependents: ${q.familyInfo.numberOfDependents}`);
+      if (q.familyInfo.financiallyDependentMembers) parts.push(`- Financially Dependent Members: ${q.familyInfo.financiallyDependentMembers}`);
+      if (q.familyInfo.summary) parts.push(`- Family Summary: ${q.familyInfo.summary}`);
+    }
+    if (q.financialInfo) {
+      parts.push(`### Financial Info`);
+      if (q.financialInfo.annualIncomeRange) parts.push(`- Annual Income Range: ${q.financialInfo.annualIncomeRange}`);
+      if (q.financialInfo.estimatedInvestableAssets) parts.push(`- Estimated Investable Assets: ${q.financialInfo.estimatedInvestableAssets}`);
+      if (q.financialInfo.financialGoals?.length) parts.push(`- Financial Goals: ${q.financialInfo.financialGoals.filter(Boolean).join(', ')}`);
+    }
+    if (q.communicationPreferences) {
+      parts.push(`### Communication Preferences`);
+      if (q.communicationPreferences.preferredLanguage) parts.push(`- Preferred Language: ${q.communicationPreferences.preferredLanguage}`);
+      if (q.communicationPreferences.preferredConsultation) parts.push(`- Preferred Consultation: ${q.communicationPreferences.preferredConsultation}`);
+    }
   }
 
   // --- AI Summary ---
@@ -163,20 +228,10 @@ export default function MemoryChat({ client }) {
   }, [messages, isTyping]);
 
   // Build conversation history for multi-turn context
-  const buildContents = useCallback(
+  const buildPayload = useCallback(
     (userQuery) => {
       const systemPrompt = buildSystemPrompt(client);
       const contents = [];
-
-      // System instruction as first user turn
-      contents.push({
-        role: 'user',
-        parts: [{ text: `[System Context — do not repeat this to the user]\n\n${systemPrompt}\n\n---\n\nPlease acknowledge that you have loaded the client context by responding naturally to my first question.` }],
-      });
-      contents.push({
-        role: 'model',
-        parts: [{ text: `Understood. I've loaded the full profile for ${client.name}. I'm ready to answer your questions about them.` }],
-      });
 
       // Existing chat history (skip the initial welcome message)
       for (const msg of messages.slice(1)) {
@@ -192,7 +247,7 @@ export default function MemoryChat({ client }) {
         parts: [{ text: userQuery }],
       });
 
-      return contents;
+      return { contents, systemInstruction: systemPrompt };
     },
     [client, messages],
   );
@@ -207,14 +262,14 @@ export default function MemoryChat({ client }) {
     setError('');
 
     try {
-      const contents = buildContents(trimmed);
+      const { contents, systemInstruction } = buildPayload(trimmed);
 
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ contents }),
+        body: JSON.stringify({ contents, systemInstruction }),
       });
 
       if (!response.ok) {
