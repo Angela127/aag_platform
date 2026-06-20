@@ -1,0 +1,14 @@
+# Ignore file for gcloud deployment uploads
+.gcloudignore
+.git
+.gitignore
+node_modules/
+dist/
+
+# Exclude sensitive backend keys, but allow firebase.js
+src/credentials/google.json
+src/credentials/*.json
+
+.env
+.env.local
+.env.production
