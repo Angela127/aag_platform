@@ -21,13 +21,6 @@ const MANAGER_LINKS = [
   { to: '/reports',           label: 'Reports',     icon: BarChart3 },
 ];
 
-const DEFAULT_CUSTOMER_NOTIFICATIONS = [
-  { id: 'c-notif-1', text: "Medical Insurance expires in 30 days", time: '1h ago', unread: true, type: 'policy' },
-  { id: 'c-notif-2', text: "Annual Policy Review scheduled for June 25", time: '3h ago', unread: true, type: 'advisor' },
-  { id: 'c-notif-3', text: "Upload latest payslip is overdue!", time: '5h ago', unread: true, type: 'task' },
-  { id: 'c-notif-4', text: "Sign updated policy document is pending", time: '1d ago', unread: false, type: 'task' },
-];
-
 const DEFAULT_AGENT_NOTIFICATIONS = [
   { id: 'a-notif-1', text: "John Tan's policy expires soon", time: '2h ago', unread: true, type: 'policy' },
   { id: 'a-notif-2', text: 'Sarah Lim not contacted in 45 days', time: '1d ago', unread: true, type: 'client' },
@@ -46,16 +39,15 @@ export default function Navbar() {
 
   useEffect(() => {
     if (!role) return;
-    const key = role === 'customer' ? 'aag_customer_notifs' : 'aag_agent_notifs';
+    const key = 'aag_agent_notifs';
     
     const loadNotifs = () => {
       const stored = localStorage.getItem(key);
       if (stored) {
         setNotifications(JSON.parse(stored));
       } else {
-        const defaults = role === 'customer' ? DEFAULT_CUSTOMER_NOTIFICATIONS : DEFAULT_AGENT_NOTIFICATIONS;
-        localStorage.setItem(key, JSON.stringify(defaults));
-        setNotifications(defaults);
+        localStorage.setItem(key, JSON.stringify(DEFAULT_AGENT_NOTIFICATIONS));
+        setNotifications(DEFAULT_AGENT_NOTIFICATIONS);
       }
     };
 
@@ -88,7 +80,7 @@ export default function Navbar() {
   };
 
   const handleMarkAsRead = (id) => {
-    const key = role === 'customer' ? 'aag_customer_notifs' : 'aag_agent_notifs';
+    const key = 'aag_agent_notifs';
     const updated = notifications.map(n => n.id === id ? { ...n, unread: false } : n);
     localStorage.setItem(key, JSON.stringify(updated));
     setNotifications(updated);
@@ -96,7 +88,7 @@ export default function Navbar() {
   };
 
   const handleDismiss = (id) => {
-    const key = role === 'customer' ? 'aag_customer_notifs' : 'aag_agent_notifs';
+    const key = 'aag_agent_notifs';
     const updated = notifications.filter(n => n.id !== id);
     localStorage.setItem(key, JSON.stringify(updated));
     setNotifications(updated);
@@ -104,7 +96,7 @@ export default function Navbar() {
   };
 
   const handleClearAll = () => {
-    const key = role === 'customer' ? 'aag_customer_notifs' : 'aag_agent_notifs';
+    const key = 'aag_agent_notifs';
     localStorage.setItem(key, JSON.stringify([]));
     setNotifications([]);
     window.dispatchEvent(new Event('aag-notifications-updated'));
@@ -196,43 +188,6 @@ export default function Navbar() {
                       <span className={styles.dropdownSub}>{unreadCount} unread</span>
                     </div>
                     
-                    {role === 'customer' ? (
-                      <div className={styles.notifScrollArea}>
-                        {/* Policy alerts group */}
-                        {notifications.some(n => n.type === 'policy') && (
-                          <div className={styles.notifGroup}>
-                            <h4 className={styles.groupTitle}>Policy Alerts</h4>
-                            <ul className={styles.notifList}>
-                              {notifications.filter(n => n.type === 'policy').map(n => renderNotifItem(n))}
-                            </ul>
-                          </div>
-                        )}
-                        {/* Advisor updates group */}
-                        {notifications.some(n => n.type === 'advisor') && (
-                          <div className={styles.notifGroup}>
-                            <h4 className={styles.groupTitle}>Advisor Updates</h4>
-                            <ul className={styles.notifList}>
-                              {notifications.filter(n => n.type === 'advisor').map(n => renderNotifItem(n))}
-                            </ul>
-                          </div>
-                        )}
-                        {/* Action tasks group */}
-                        {notifications.some(n => n.type === 'task') && (
-                          <div className={styles.notifGroup}>
-                            <h4 className={styles.groupTitle}>Action Tasks</h4>
-                            <ul className={styles.notifList}>
-                              {notifications.filter(n => n.type === 'task').map(n => renderNotifItem(n))}
-                            </ul>
-                          </div>
-                        )}
-                        {notifications.length === 0 && (
-                          <div className={styles.emptyNotifs}>
-                            No notifications
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      // Agent notifications
                       <ul className={styles.notifList}>
                         {notifications.map(n => (
                           <li key={n.id} className={`${styles.notifItem} ${n.unread ? styles.unread : ''}`}>
@@ -244,7 +199,6 @@ export default function Navbar() {
                           <li className={styles.emptyNotifItem}>No notifications</li>
                         )}
                       </ul>
-                    )}
                     
                     <div className={styles.dropdownFooter}>
                       <button className={styles.footerLink} onClick={handleClearAll}>Clear All</button>
@@ -267,7 +221,7 @@ export default function Navbar() {
                   <div className={styles.dropdown}>
                     <div className={styles.dropdownHeader}>
                       <span>{displayName}</span>
-                      <span className={styles.dropdownSub}>{role === 'agent' ? 'Financial Advisor' : role === 'manager' ? 'Manager' : 'Customer'}</span>
+                      <span className={styles.dropdownSub}>{role === 'manager' ? 'Manager' : 'Financial Advisor'}</span>
                     </div>
                     <ul className={styles.menuList}>
                       <li>

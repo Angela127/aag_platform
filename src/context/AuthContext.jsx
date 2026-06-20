@@ -6,7 +6,7 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser]     = useState(null);
-  const [role, setRole]     = useState(null);   // 'agent' | 'customer' | 'manager'
+  const [role, setRole]     = useState(null);   // 'agent' | 'manager'
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -20,8 +20,6 @@ export function AuthProvider({ children }) {
         
         if (email === 'manager@gmail.com') {
           resolvedRole = 'manager';
-        } else if (email === 'customer@gmail.com') {
-          resolvedRole = 'customer';
         } else if (email === 'advisor@gmail.com') {
           resolvedRole = 'agent';
         }

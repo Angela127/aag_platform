@@ -13,6 +13,7 @@ export default function LoginPage() {
   const [showPass, setShowPass] = useState(false);
   const [loading, setLoading]   = useState(false);
   const [error, setError]       = useState('');
+  const [role, setRole]         = useState('agent');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,12 +27,10 @@ export default function LoginPage() {
       const lowerEmail = email.toLowerCase();
       if (lowerEmail === 'manager@gmail.com') {
         finalRole = 'manager';
-      } else if (lowerEmail === 'customer@gmail.com') {
-        finalRole = 'customer';
       } else if (lowerEmail === 'advisor@gmail.com') {
         finalRole = 'agent';
       }
-      localStorage.setItem('aag_role', 'agent');
+      localStorage.setItem('aag_role', finalRole);
       navigate('/dashboard');
     } catch (err) {
       const messages = {
@@ -91,31 +90,19 @@ export default function LoginPage() {
             >
               Manager
             </button>
-            <button
-              type="button"
-              className={`${styles.roleBtn} ${role === 'customer' ? styles.roleBtnActive : ''}`}
-              onClick={() => setRole('customer')}
-            >
-              Customer
-            </button>
           </div>
 
           <div className={styles.formHead}>
             <h2 className={styles.formTitle}>
-              {role === 'agent' ? 'Advisor Sign In' : role === 'manager' ? 'Manager Sign In' : 'Customer Sign In'}
+              {role === 'manager' ? 'Manager Sign In' : 'Advisor Sign In'}
             </h2>
             <p className={styles.formSub}>
-              {role === 'agent'
-                ? 'Access your intelligence dashboard'
-                : role === 'manager'
+              {role === 'manager'
                 ? 'Manage your team of advisors'
-                : 'View your financial portfolio'}
+                : 'Access your intelligence dashboard'}
             </p>
-            </div>
-          <div className={styles.formHead}>
-            <h2 className={styles.formTitle}>Advisor Sign In</h2>
-            <p className={styles.formSub}>Access your intelligence dashboard</p>
           </div>
+
 
           {error && (
             <div className={styles.errorBox}>

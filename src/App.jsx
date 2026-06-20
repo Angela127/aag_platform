@@ -3,7 +3,6 @@ import { AuthProvider, useAuth } from './context/AuthContext.jsx';
 import Navbar from './components/layout/Navbar.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import AgentDashboard from './pages/AgentDashboard.jsx';
-import CustomerPortal from './pages/CustomerPortal.jsx';
 import ClientManagement from './pages/ClientManagement.jsx';
 import ClientDetail from './pages/ClientDetail.jsx';
 import TrainingPage from './pages/TrainingPage.jsx';
@@ -103,12 +102,6 @@ function AppRoutes() {
           <AppLayout><ManagerDashboard /></AppLayout>
         </ProtectedRoute>
       } />
-      <Route path="/customer-portal" element={
-        <ProtectedRoute allowedRoles="customer">
-          <AppLayout><CustomerPortal /></AppLayout>
-        </ProtectedRoute>
-      } />
-      <Route path="/client-portal" element={<Navigate to="/customer-portal" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
