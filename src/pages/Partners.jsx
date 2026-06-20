@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import {
-  Handshake, Search, Filter, Star, MapPin, Calendar, Phone, Mail,
-  MessageSquare, CheckCircle2, Clock, ArrowRight, ChevronRight,
-  Plus, Award, AlertCircle, ThumbsUp, ChevronDown, UserCheck,
-  Send, Info, CalendarCheck, ExternalLink, X, FileText, Check, AlertTriangle
+  Handshake, Search, Filter, Star, MapPin, Phone, Mail,
+  MessageSquare, Award, AlertCircle, ThumbsUp, ChevronDown, UserCheck,
+  Send, Info, ExternalLink, X, Check
 } from 'lucide-react';
 import styles from './Partners.module.css';
 import { collection, getDocs, setDoc, updateDoc, doc, onSnapshot } from 'firebase/firestore';
@@ -199,10 +198,8 @@ const INITIAL_REFERRALS = [
   }
 ];
 
-const PIPELINE_STAGES = ['Pending', 'Accepted', 'Meeting Scheduled', 'Completed', 'Closed'];
-
 export default function Partners() {
-  const [activeTab, setActiveTab] = useState('directory'); // 'directory' | 'tracker' | 'history'
+  const [activeTab, setActiveTab] = useState('directory'); // 'directory' | 'history'
   
   // Loaded State
   const [partners, setPartners] = useState([]);
@@ -231,12 +228,6 @@ export default function Partners() {
   const [showReferralModal, setShowReferralModal] = useState(false);
   const [referringPartner, setReferringPartner] = useState(null);
   const [referralNote, setReferralNote] = useState('');
-  
-  // Review/Feedback Modal State
-  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
-  const [feedbackReferralId, setFeedbackReferralId] = useState(null);
-  const [feedbackRating, setFeedbackRating] = useState(5);
-  const [feedbackComment, setFeedbackComment] = useState('');
 
   // Toast State
   const [toastMessage, setToastMessage] = useState(null);
@@ -437,91 +428,6 @@ export default function Partners() {
     }
   };
 
-  // Advance Pipeline Status
-  const handleAdvanceStatus = async (referralId) => {
-    const ref = referrals.find(r => r.id === referralId);
-    if (!ref) return;
-
-    const currentIndex = PIPELINE_STAGES.indexOf(ref.status);
-    if (currentIndex === -1 || currentIndex === PIPELINE_STAGES.length - 1) return;
-
-    const nextStatus = PIPELINE_STAGES[currentIndex + 1];
-
-    try {
-      await updateDoc(doc(db, 'referrals', referralId), {
-        status: nextStatus
-      });
-
-      triggerToast(`Referral status advanced to "${nextStatus}"`);
-
-      // If advanced to Completed or Closed, trigger feedback modal
-      if (nextStatus === 'Completed' || nextStatus === 'Closed') {
-        setFeedbackReferralId(referralId);
-        setFeedbackRating(5);
-        setFeedbackComment('');
-        setFeedbackModalOpen(true);
-      }
-    } catch (err) {
-      console.error('Error advancing status: ', err);
-      triggerToast('Failed to update status.');
-    }
-  };
-
-  // Submit Feedback & Rating
-  const handleSubmitFeedback = async () => {
-    const referralId = feedbackReferralId;
-    const rating = feedbackRating;
-    const comment = feedbackComment;
-
-    const referral = referrals.find(r => r.id === referralId);
-    if (!referral) return;
-
-    try {
-      await updateDoc(doc(db, 'referrals', referralId), {
-        rating,
-        feedback: comment
-      });
-
-      const partner = partners.find(p => p.id === referral.partnerId);
-      if (partner) {
-        const updatedRefs = referrals.map(r => r.id === referralId ? { ...r, rating, feedback: comment } : r);
-        const partnerRefs = updatedRefs.filter(r => r.partnerId === partner.id && r.rating !== null);
-        const ratings = partnerRefs.map(r => r.rating);
-        
-        const newAvgRating = ratings.length > 0 
-          ? parseFloat((ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1))
-          : rating;
-
-        const successfulReferralsCount = updatedRefs.filter(r => r.partnerId === partner.id && r.status === 'Completed').length;
-        const totalReferralsCount = partner.totalReferrals;
-        const newSuccessRate = Math.round((successfulReferralsCount / Math.max(totalReferralsCount, 1)) * 100);
-        const newReliability = Math.min(Math.max(newSuccessRate + 5, 75), 100);
-
-        await updateDoc(doc(db, 'partners', partner.id), {
-          rating: newAvgRating,
-          successRate: newSuccessRate,
-          reliability: newReliability
-        });
-      }
-
-      setFeedbackModalOpen(false);
-      setFeedbackReferralId(null);
-      triggerToast("Collaboration feedback saved and partner stats updated!");
-    } catch (err) {
-      console.error('Error submitting feedback: ', err);
-      triggerToast('Failed to save feedback.');
-    }
-  };
-
-  // Save Notes on Blur
-  const handleSaveNotes = async (referralId, notes) => {
-    try {
-      await updateDoc(doc(db, 'referrals', referralId), { notes });
-      triggerToast('Notes saved.');
-    } catch (err) {
-      console.error('Error saving notes: ', err);
-    }
-  };
 
   // Availability calendar slots selection
   const [selectedSlot, setSelectedSlot] = useState(null);
@@ -609,17 +515,6 @@ export default function Partners() {
             onClick={() => setActiveTab('directory')}
           >
             <Search size={15} /> Partner Directory
-          </button>
-          <button
-            className={`${styles.tabBtn} ${activeTab === 'tracker' ? styles.activeTab : ''}`}
-            onClick={() => setActiveTab('tracker')}
-          >
-            <Clock size={15} /> Referral Tracker
-            {referrals.filter(r => r.status === 'Pending' || r.status === 'Accepted').length > 0 && (
-              <span className={styles.notifBadge}>
-                {referrals.filter(r => r.status === 'Pending' || r.status === 'Accepted').length}
-              </span>
-            )}
           </button>
           <button
             className={`${styles.tabBtn} ${activeTab === 'history' ? styles.activeTab : ''}`}
@@ -734,7 +629,7 @@ export default function Partners() {
                     ))}
                     {recommendedPartners.length === 0 && (
                       <div className={styles.emptyState} style={{ padding: 12 }}>
-                        No specific match exceeds 50% for this client's current profile tags.
+                        {"No specific match exceeds 50% for this client's current profile tags."}
                       </div>
                     )}
                   </div>
@@ -932,149 +827,7 @@ export default function Partners() {
           </>
         )}
 
-        {/* Tab 2: Referral Tracker */}
-        {activeTab === 'tracker' && (
-          <div className={styles.trackerContainer}>
-            <div className={styles.trackerHeader}>
-              <h2>Active Referral Logs</h2>
-              <span className="badge badge-gray">{referrals.length} Total Referrals</span>
-            </div>
 
-            <div className={styles.referralList}>
-              {referrals.map(ref => {
-                const currentStageIdx = PIPELINE_STAGES.indexOf(ref.status);
-                const hasFeedback = ref.rating !== null;
-                const isCompleteOrClosed = ref.status === 'Completed' || ref.status === 'Closed';
-
-                return (
-                  <div key={ref.id} className={styles.refRowCard}>
-                    {/* Row Main Info */}
-                    <div className={styles.refRowHeader}>
-                      <div className={styles.refClientPartner}>
-                        <div>
-                          <span className={styles.refLabel}>Client</span>
-                          <strong className={styles.refName}>{ref.clientName}</strong>
-                        </div>
-                        <ArrowRight size={14} className={styles.refArrow} />
-                        <div>
-                          <span className={styles.refLabel}>Partner Specialist</span>
-                          <strong className={styles.refName}>{ref.partnerName}</strong>
-                        </div>
-                      </div>
-
-                      <div className={styles.refDateStatus}>
-                        <div>
-                          <span className={styles.refLabel}>Initiated</span>
-                          <span className={styles.refValue}>{ref.dateInitiated}</span>
-                        </div>
-                        <div>
-                          <span className={styles.refLabel}>Status</span>
-                          <span className={`${styles.statusLabelBadge} ${styles[`status_${ref.status.replace(' ', '')}`]}`}>
-                            {ref.status}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Pipeline graphic */}
-                    <div className={styles.pipelineTimeline}>
-                      {PIPELINE_STAGES.map((stage, idx) => {
-                        const isDone = idx <= currentStageIdx;
-                        const isCurrent = idx === currentStageIdx;
-                        return (
-                          <div key={stage} className={`${styles.pipelineStep} ${isDone ? styles.stepDone : ''} ${isCurrent ? styles.stepCurrent : ''}`}>
-                            <div className={styles.stepCircle}>
-                              {isDone && !isCurrent ? <Check size={12} strokeWidth={3} /> : idx + 1}
-                            </div>
-                            <span className={styles.stepLabel}>{stage}</span>
-                          </div>
-                        );
-                      })}
-                    </div>
-
-                    {/* Notes & Actions Grid */}
-                    <div className={styles.refDetailsPanel}>
-                      <div className={styles.refNotesBlock}>
-                        <div className={styles.blockTitle}>
-                          <FileText size={13} />
-                          <span>Advisor Notes</span>
-                        </div>
-                        <textarea
-                          className={styles.notesTextarea}
-                          defaultValue={ref.notes || ''}
-                          placeholder="Add collaborative notes or project milestones..."
-                          onBlur={(e) => handleSaveNotes(ref.id, e.target.value)}
-                        />
-                      </div>
-
-                      <div className={styles.refActionsBlock}>
-                        <div className={styles.blockTitle}>
-                          <Info size={13} />
-                          <span>Pipeline Actions</span>
-                        </div>
-                        <div className={styles.actionsBtnGroup}>
-                          {!isCompleteOrClosed ? (
-                            <button
-                              className="btn btn-primary btn-sm"
-                              onClick={() => handleAdvanceStatus(ref.id)}
-                            >
-                              <CheckCircle2 size={13} /> Advance Pipeline status
-                            </button>
-                          ) : (
-                            <div className={styles.completeStatusAlert}>
-                              <Check size={14} /> Pipeline Finished
-                            </div>
-                          )}
-
-                          {isCompleteOrClosed && !hasFeedback && (
-                            <button
-                              className="btn btn-secondary btn-sm"
-                              style={{ borderColor: 'var(--aag-primary-light)', color: 'var(--aag-primary-light)' }}
-                              onClick={() => {
-                                setFeedbackReferralId(ref.id);
-                                setFeedbackRating(5);
-                                setFeedbackComment('');
-                                setFeedbackModalOpen(true);
-                              }}
-                            >
-                              <Star size={13} fill="currentColor" /> Submit Advisor Feedback
-                            </button>
-                          )}
-
-                          {hasFeedback && (
-                            <div className={styles.feedbackDisplayBox}>
-                              <div className={styles.feedbackDisplayStars}>
-                                {[...Array(5)].map((_, i) => (
-                                  <Star
-                                    key={i}
-                                    size={12}
-                                    fill={i < ref.rating ? 'currentColor' : 'none'}
-                                    style={{ color: '#d97706' }}
-                                  />
-                                ))}
-                              </div>
-                              <p className={styles.feedbackDisplayText}>
-                                "{ref.feedback}"
-                              </p>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-
-              {referrals.length === 0 && (
-                <div className={styles.emptyContainer} style={{ background: 'var(--white)' }}>
-                  <AlertCircle size={40} className={styles.emptyIcon} />
-                  <h3>No referrals logged</h3>
-                  <p>Send a referral from the Partner Directory to populate this pipeline tracking log.</p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
 
         {/* Tab 3: Collaboration History */}
         {activeTab === 'history' && (
@@ -1211,63 +964,7 @@ export default function Partners() {
         </div>
       )}
 
-      {/* MODAL 2: Advisor Review Feedback Modal */}
-      {feedbackModalOpen && (
-        <div className="overlay" style={{ zIndex: 1000 }}>
-          <div className={`${styles.card} ${styles.modalCard} animate-scalein`}>
-            <div className={styles.modalHeader}>
-              <h3>Leave Advisor Feedback</h3>
-              <button className={styles.modalCloseBtn} onClick={() => setFeedbackModalOpen(false)}>
-                <X size={18} />
-              </button>
-            </div>
-            <div className={styles.modalBody}>
-              <p style={{ color: 'var(--text-secondary)', marginBottom: 16 }}>
-                Submit your collaboration experience. This feedback directly helps maintain partner catalog quality and recalculates reliability index scores.
-              </p>
 
-              <div className="form-group" style={{ marginBottom: 16 }}>
-                <span className="form-label">Collaboration Rating</span>
-                <div className={styles.ratingPicker}>
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      className={styles.starPickerBtn}
-                      onClick={() => setFeedbackRating(star)}
-                    >
-                      <Star
-                        size={28}
-                        fill={star <= feedbackRating ? 'var(--aag-primary)' : 'none'}
-                        style={{ color: star <= feedbackRating ? 'var(--aag-primary)' : 'var(--border)' }}
-                      />
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label className="form-label" htmlFor="feedback-text-input">Advisor Notes & Remarks</label>
-                <textarea
-                  id="feedback-text-input"
-                  className="form-input"
-                  style={{ height: 100, resize: 'vertical' }}
-                  value={feedbackComment}
-                  onChange={(e) => setFeedbackComment(e.target.value)}
-                  placeholder="Write a brief description of how the partner handled your client, professionalism, compliance standards, etc."
-                />
-              </div>
-            </div>
-            <div className={styles.modalFooter}>
-              <button className="btn btn-secondary btn-sm" onClick={() => setFeedbackModalOpen(false)}>
-                Skip Feedback
-              </button>
-              <button className="btn btn-primary btn-sm" onClick={handleSubmitFeedback}>
-                Submit &amp; Update Stats
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* DRAWER: Partner Detailed Profile Page */}
       {selectedPartnerId && detailedPartner && (
