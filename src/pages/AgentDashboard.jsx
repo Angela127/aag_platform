@@ -2,17 +2,18 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import MorningBriefingModal from '../components/dashboard/MorningBriefingModal.jsx';
 import MeetingSchedule from '../components/dashboard/MeetingSchedule.jsx';
-import TaskChecklist from '../components/dashboard/TaskChecklist.jsx';
 import SmartReminderPanel from '../components/dashboard/SmartReminderPanel.jsx';
 import KanbanBoard from '../components/dashboard/KanbanBoard.jsx';
+import SectorNewsDrawer from '../components/dashboard/SectorNewsDrawer.jsx';
 
 import { mockKanban, mockMeetings, mockPipeline } from '../lib/mockData.js';
-import { Users, TrendingUp, Calendar, FileText, CheckSquare, Sparkles } from 'lucide-react';
+import { Users, TrendingUp, Calendar, FileText, CheckSquare, Sparkles, Newspaper } from 'lucide-react';
 import styles from './AgentDashboard.module.css';
 
 export default function AgentDashboard() {
   const { user } = useAuth();
   const [showBriefing, setShowBriefing] = useState(false);
+  const [showNewsDrawer, setShowNewsDrawer] = useState(false);
   const [selectedDate, setSelectedDate] = useState('2026-06-20');
   
   // Shared States
@@ -61,13 +62,22 @@ export default function AgentDashboard() {
           <h1 className={styles.pageTitle}>{greeting}, {displayName}</h1>
           <p className={styles.pageDate}>{today}</p>
         </div>
-        <button
-          className={styles.briefingBtn}
-          onClick={() => setShowBriefing(true)}
-        >
-          <Sparkles size={14} className={styles.sparkleIcon} />
-          <span>Morning Briefing</span>
-        </button>
+        <div style={{ display: 'flex', gap: 12 }}>
+          <button
+            className={styles.briefingBtn}
+            onClick={() => setShowBriefing(true)}
+          >
+            <Sparkles size={14} className={styles.sparkleIcon} />
+            <span>Morning Briefing</span>
+          </button>
+          <button
+            className={styles.briefingBtn}
+            onClick={() => setShowNewsDrawer(true)}
+          >
+            <Newspaper size={14} style={{ color: 'var(--aag-primary)' }} />
+            <span>Sector News</span>
+          </button>
+        </div>
       </div>
 
       {/* Custom Dynamic KPI Row */}
@@ -148,6 +158,12 @@ export default function AgentDashboard() {
           setColumns={setColumns}
         />
       </div>
+
+      {showNewsDrawer && (
+        <SectorNewsDrawer
+          onClose={() => setShowNewsDrawer(false)}
+        />
+      )}
     </div>
   );
 }
