@@ -559,15 +559,15 @@ export default function ClientDetail() {
 
           {/* RAG Q&A Chat */}
           <MemoryChat client={client} />
+
+          {/* Expense Tracker */}
+          <ExpenseTracker initialExpenses={client.expenses} onAddExpense={handleAddExpense} />
         </div>
 
         {/* Right / Sidebar Column (1/3) */}
         <div className="space-y-6">
           {/* Health Score */}
           <HealthScore client={client} />
-
-          {/* Profile Similarity Insights */}
-          <ProfileSimilarity currentClient={client} allClients={allClients} />
 
           {/* Follow-ups */}
           <FollowUpCard
@@ -576,8 +576,8 @@ export default function ClientDetail() {
             onAddFollowUp={handleAddFollowUp}
           />
 
-          {/* Expense Tracker */}
-          <ExpenseTracker initialExpenses={client.expenses} onAddExpense={handleAddExpense} />
+          {/* Profile Similarity Insights */}
+          <ProfileSimilarity currentClient={client} allClients={allClients} />
         </div>
       </div>
 

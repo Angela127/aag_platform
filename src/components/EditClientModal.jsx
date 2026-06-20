@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { X, ChevronDown, ChevronUp, Save } from 'lucide-react';
 import PropTypes from 'prop-types';
 import DynamicStringList from './DynamicStringList.jsx';
@@ -186,7 +187,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
     }
   };
 
-  return (
+  return createPortal(
     <div
       onClick={handleOverlayClick}
       className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/50 p-4 animate-fade-in"
@@ -196,7 +197,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
         className="bg-white rounded-xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden animate-scale-in border border-gray-100"
       >
         {/* Fixed Header */}
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-white to-gray-55/10">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gradient-to-r from-white to-gray-50">
           <div>
             <h2 className="text-lg font-bold text-gray-900">
               Edit Client &mdash; <span className="text-aag-primary">{name || client?.name}</span>
@@ -215,11 +216,15 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
         <form onSubmit={handleSave} className="flex-grow overflow-y-auto p-6 space-y-4">
           
           {/* Section 1: Basic Profile */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="border border-gray-200 rounded-lg overflow-hidden transition-all duration-200 shadow-sm bg-white">
             <button
               type="button"
               onClick={() => toggleSection('basic')}
-              className="w-full px-5 py-3.5 bg-gray-55/20 hover:bg-gray-55/40 flex items-center justify-between text-sm font-semibold text-gray-800 transition-colors"
+              className={`w-full px-5 py-3.5 flex items-center justify-between text-sm font-semibold transition-all border-l-4 ${
+                openSections.basic
+                  ? 'bg-gray-50/80 text-aag-primary border-aag-primary'
+                  : 'bg-white hover:bg-gray-50/50 text-gray-700 border-transparent'
+              }`}
             >
               <span>Basic Profile</span>
               {openSections.basic ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -232,7 +237,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <input
                     type="text"
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
@@ -242,7 +247,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <input
                     type="number"
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
                   />
@@ -252,7 +257,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <input
                     type="text"
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                     value={occupation}
                     onChange={(e) => setOccupation(e.target.value)}
                   />
@@ -260,7 +265,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Risk Level</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none bg-white"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                     value={riskLevel}
                     onChange={(e) => setRiskLevel(e.target.value)}
                   >
@@ -273,7 +278,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Avatar Image URL (Optional)</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                     placeholder="https://example.com/avatar.jpg"
                     value={avatar}
                     onChange={(e) => setAvatar(e.target.value)}
@@ -284,11 +289,15 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
           </div>
 
           {/* Section 2: Personal Information */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="border border-gray-200 rounded-lg overflow-hidden transition-all duration-200 shadow-sm bg-white">
             <button
               type="button"
               onClick={() => toggleSection('personal')}
-              className="w-full px-5 py-3.5 bg-gray-55/20 hover:bg-gray-55/40 flex items-center justify-between text-sm font-semibold text-gray-800 transition-colors"
+              className={`w-full px-5 py-3.5 flex items-center justify-between text-sm font-semibold transition-all border-l-4 ${
+                openSections.personal
+                  ? 'bg-gray-50/80 text-aag-primary border-aag-primary'
+                  : 'bg-white hover:bg-gray-50/50 text-gray-700 border-transparent'
+              }`}
             >
               <span>Personal Information</span>
               {openSections.personal ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -301,7 +310,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Nationality</label>
                     <input
                       type="text"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                       value={nationality}
                       onChange={(e) => setNationality(e.target.value)}
                     />
@@ -309,7 +318,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Marital Status</label>
                     <select
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none bg-white"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                       value={maritalStatus}
                       onChange={(e) => setMaritalStatus(e.target.value)}
                     >
@@ -322,7 +331,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Gender</label>
                     <select
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none bg-white"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                       value={gender}
                       onChange={(e) => setGender(e.target.value)}
                     >
@@ -335,7 +344,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Date of Birth</label>
                     <input
                       type="date"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none bg-white"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                       value={dob}
                       onChange={(e) => setDob(e.target.value)}
                     />
@@ -344,7 +353,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Life Stage / Primary Goal</label>
                     <input
                       type="text"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                       placeholder="e.g. Young Family, Education Planning, Retirement Focus"
                       value={lifeStage}
                       onChange={(e) => setLifeStage(e.target.value)}
@@ -369,7 +378,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Next Important Date Event</label>
                     <input
                       type="text"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                       placeholder="e.g. Policy Renewal"
                       value={nextImportantDateLabel}
                       onChange={(e) => setNextImportantDateLabel(e.target.value)}
@@ -379,7 +388,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Next Important Date</label>
                     <input
                       type="date"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none bg-white"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                       value={nextImportantDate}
                       onChange={(e) => setNextImportantDate(e.target.value)}
                     />
@@ -390,11 +399,15 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
           </div>
 
           {/* Section 3: Employment Information */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="border border-gray-200 rounded-lg overflow-hidden transition-all duration-200 shadow-sm bg-white">
             <button
               type="button"
               onClick={() => toggleSection('employment')}
-              className="w-full px-5 py-3.5 bg-gray-55/20 hover:bg-gray-55/40 flex items-center justify-between text-sm font-semibold text-gray-800 transition-colors"
+              className={`w-full px-5 py-3.5 flex items-center justify-between text-sm font-semibold transition-all border-l-4 ${
+                openSections.employment
+                  ? 'bg-gray-50/80 text-aag-primary border-aag-primary'
+                  : 'bg-white hover:bg-gray-50/50 text-gray-700 border-transparent'
+              }`}
             >
               <span>Employment Information</span>
               {openSections.employment ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -405,7 +418,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Employment Status</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none bg-white"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                     value={employmentStatus}
                     onChange={(e) => setEmploymentStatus(e.target.value)}
                   >
@@ -420,7 +433,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Company Name</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
                   />
@@ -429,7 +442,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Industry</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                     value={industry}
                     onChange={(e) => setIndustry(e.target.value)}
                   />
@@ -438,7 +451,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Years of Experience</label>
                   <input
                     type="number"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                     value={yearsExperience}
                     onChange={(e) => setYearsExperience(e.target.value)}
                   />
@@ -447,7 +460,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Occupation (synced with Basic Profile)</label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                     value={occupation}
                     onChange={(e) => setOccupation(e.target.value)}
                   />
@@ -457,11 +470,15 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
           </div>
 
           {/* Section 4: Family Information */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="border border-gray-200 rounded-lg overflow-hidden transition-all duration-200 shadow-sm bg-white">
             <button
               type="button"
               onClick={() => toggleSection('family')}
-              className="w-full px-5 py-3.5 bg-gray-55/20 hover:bg-gray-55/40 flex items-center justify-between text-sm font-semibold text-gray-800 transition-colors"
+              className={`w-full px-5 py-3.5 flex items-center justify-between text-sm font-semibold transition-all border-l-4 ${
+                openSections.family
+                  ? 'bg-gray-50/80 text-aag-primary border-aag-primary'
+                  : 'bg-white hover:bg-gray-50/50 text-gray-700 border-transparent'
+              }`}
             >
               <span>Family Information</span>
               {openSections.family ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -474,7 +491,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Number of Dependents</label>
                     <input
                       type="number"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                       value={numDependents}
                       onChange={(e) => setNumDependents(e.target.value)}
                     />
@@ -482,7 +499,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Any Family Members Dependent on You?</label>
                     <select
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none bg-white"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                       value={anyFamilyDependent}
                       onChange={(e) => setAnyFamilyDependent(e.target.value)}
                     >
@@ -497,7 +514,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Spouse Name (Optional)</label>
                         <input
                           type="text"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                           value={spouseName}
                           onChange={(e) => setSpouseName(e.target.value)}
                         />
@@ -506,7 +523,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Children's Ages (Optional)</label>
                         <input
                           type="text"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none"
+                          className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                           placeholder="e.g. 5, 8"
                           value={childrenAges}
                           onChange={(e) => setChildrenAges(e.target.value)}
@@ -519,7 +536,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Family Details Summary</label>
                   <textarea
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none min-h-[70px]"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white min-h-[70px]"
                     placeholder="e.g. Married, two children (ages 8 and 10)"
                     value={familyDetails}
                     onChange={(e) => setFamilyDetails(e.target.value)}
@@ -530,11 +547,15 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
           </div>
 
           {/* Section 5: Financial Information */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="border border-gray-200 rounded-lg overflow-hidden transition-all duration-200 shadow-sm bg-white">
             <button
               type="button"
               onClick={() => toggleSection('financial')}
-              className="w-full px-5 py-3.5 bg-gray-55/20 hover:bg-gray-55/40 flex items-center justify-between text-sm font-semibold text-gray-800 transition-colors"
+              className={`w-full px-5 py-3.5 flex items-center justify-between text-sm font-semibold transition-all border-l-4 ${
+                openSections.financial
+                  ? 'bg-gray-50/80 text-aag-primary border-aag-primary'
+                  : 'bg-white hover:bg-gray-50/50 text-gray-700 border-transparent'
+              }`}
             >
               <span>Financial Information</span>
               {openSections.financial ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -546,7 +567,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Estimated Investable Assets</label>
                     <select
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none bg-white"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                       value={estimatedInvestableAssets}
                       onChange={(e) => setEstimatedInvestableAssets(e.target.value)}
                     >
@@ -562,7 +583,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                   <div>
                     <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Annual Income Range</label>
                     <select
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none bg-white"
+                      className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                       value={annualIncomeRange}
                       onChange={(e) => setAnnualIncomeRange(e.target.value)}
                     >
@@ -593,11 +614,15 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
           </div>
 
           {/* Section 6: Communication Preferences */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="border border-gray-200 rounded-lg overflow-hidden transition-all duration-200 shadow-sm bg-white">
             <button
               type="button"
               onClick={() => toggleSection('communication')}
-              className="w-full px-5 py-3.5 bg-gray-55/20 hover:bg-gray-55/40 flex items-center justify-between text-sm font-semibold text-gray-800 transition-colors"
+              className={`w-full px-5 py-3.5 flex items-center justify-between text-sm font-semibold transition-all border-l-4 ${
+                openSections.communication
+                  ? 'bg-gray-50/80 text-aag-primary border-aag-primary'
+                  : 'bg-white hover:bg-gray-50/50 text-gray-700 border-transparent'
+              }`}
             >
               <span>Communication Preferences</span>
               {openSections.communication ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -608,7 +633,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Preferred Language</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none bg-white"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                     value={preferredLanguage}
                     onChange={(e) => setPreferredLanguage(e.target.value)}
                   >
@@ -621,7 +646,7 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
                 <div>
                   <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Preferred Consultation Method</label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-1 focus:ring-aag-primary focus:border-aag-primary focus:outline-none bg-white"
+                    className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary focus:outline-none transition-all duration-200 bg-white"
                     value={preferredConsultation}
                     onChange={(e) => setPreferredConsultation(e.target.value)}
                   >
@@ -636,11 +661,15 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
           </div>
 
           {/* Section 7: Special Preferences */}
-          <div className="border border-gray-200 rounded-lg overflow-hidden">
+          <div className="border border-gray-200 rounded-lg overflow-hidden transition-all duration-200 shadow-sm bg-white">
             <button
               type="button"
               onClick={() => toggleSection('special')}
-              className="w-full px-5 py-3.5 bg-gray-55/20 hover:bg-gray-55/40 flex items-center justify-between text-sm font-semibold text-gray-800 transition-colors"
+              className={`w-full px-5 py-3.5 flex items-center justify-between text-sm font-semibold transition-all border-l-4 ${
+                openSections.special
+                  ? 'bg-gray-50/80 text-aag-primary border-aag-primary'
+                  : 'bg-white hover:bg-gray-50/50 text-gray-700 border-transparent'
+              }`}
             >
               <span>Special Preferences (Advisor Notes)</span>
               {openSections.special ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -680,7 +709,8 @@ export default function EditClientModal({ client, isOpen, onClose, onSave }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 

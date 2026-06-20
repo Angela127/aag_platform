@@ -52,7 +52,7 @@ export default function DynamicStringList({
             <input
               type="text"
               ref={(el) => (inputsRef.current[index] = el)}
-              className="flex-grow px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-aag-primary focus:border-aag-primary"
+              className="flex-grow px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-aag-primary/10 focus:border-aag-primary transition-all duration-200 bg-white"
               placeholder={placeholder}
               value={item}
               onChange={(e) => handleTextChange(index, e.target.value)}

@@ -266,21 +266,21 @@ export default function ClientMemory({ client, section, hideShell = false }) {
     nationality: 'Nationality',
     gender: 'Gender',
     
-    employmentStatus: 'Employment Status',
+    employmentStatus: 'Employment',
     occupation: 'Occupation',
     company: 'Company',
     companyName: 'Company Name',
     jobTitle: 'Job Title',
     industry: 'Industry',
     department: 'Department',
-    workExperience: 'Work Experience',
-    yearsExperience: 'Years of Experience',
+    workExperience: 'Work Exp.',
+    yearsExperience: 'Experience',
     
-    preferredContact: 'Preferred Contact',
-    preferredCommunicationChannel: 'Preferred Channel',
-    preferredLanguage: 'Preferred Language',
-    preferredConsultation: 'Preferred Consultation',
-    communicationPreferences: 'Communication Preferences',
+    preferredContact: 'Pref. Contact',
+    preferredCommunicationChannel: 'Pref. Channel',
+    preferredLanguage: 'Pref. Language',
+    preferredConsultation: 'Pref. Consultation',
+    communicationPreferences: 'Comm. Prefs',
     languages: 'Languages Spoken',
 
     income: 'Income',
@@ -293,19 +293,19 @@ export default function ClientMemory({ client, section, hideShell = false }) {
     liabilities: 'Liabilities',
     financialGoals: 'Financial Goals',
     monthlySavings: 'Monthly Savings',
-    estimatedInvestableAssets: 'Estimated Investable Assets',
-    annualIncomeRange: 'Annual Income Range',
-    existingFinancialAdvisor: 'Has Existing Advisor',
+    estimatedInvestableAssets: 'Est. Assets',
+    annualIncomeRange: 'Annual Income',
+    existingFinancialAdvisor: 'Existing Advisor',
 
-    numDependents: 'Number of Dependents',
+    numDependents: 'Dependents',
     spouseName: 'Spouse Name',
     childrenAges: "Children's Ages",
-    anyFamilyDependent: 'Any Family Members Financially Dependent on You?',
-    familyDetails: 'Family Details Summary',
-    lifeStage: 'Life Stage / Primary Goal',
-    nextImportantDateLabel: 'Next Important Event',
-    nextImportantDate: 'Next Important Date',
-    specialPreferences: 'Special Preferences'
+    anyFamilyDependent: 'Family Dependent?',
+    familyDetails: 'Family Details',
+    lifeStage: 'Life Stage',
+    nextImportantDateLabel: 'Next Event',
+    nextImportantDate: 'Next Event Date',
+    specialPreferences: 'Special Prefs'
   };
 
   const personalKeys = [
@@ -374,19 +374,19 @@ export default function ClientMemory({ client, section, hideShell = false }) {
 
   const renderSnapshot = () => {
     const content = (
-      <div className="pt-3 pb-2 px-4 flex gap-3.5 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent scroll-smooth flex-grow">
+      <div className="pt-4 pb-3 px-5 flex gap-6 overflow-x-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent scroll-smooth flex-grow">
         {/* Personal Information */}
         {personalInfo.length > 0 && (
-          <div className="min-w-[240px] bg-gray-50/40 border border-gray-100/90 rounded-xl p-3 shrink-0 animate-fade-in flex flex-col justify-start">
+          <div className="flex-1 min-w-[280px] sm:min-w-[calc(50%-12px)] sm:max-w-[calc(50%-12px)] shrink-0 animate-fade-in flex flex-col justify-start pr-6 border-r border-gray-100 last:border-r-0 last:pr-0">
             <div>
-              <p className="text-[0.6rem] uppercase font-bold text-gray-400 tracking-wider mb-1.5">
+              <p className="text-[0.65rem] uppercase font-bold text-aag-primary tracking-wider mb-2 border-b border-aag-primary/20 pb-1">
                 Personal Information
               </p>
-              <div className="space-y-1">
+              <div className="space-y-2 pt-1">
                 {personalInfo.map((item) => (
-                  <div key={item.key} className="text-xs">
-                    <span className="text-[0.55rem] text-gray-400 block leading-tight font-medium uppercase mb-0.5">{item.label}</span>
-                    <span className="text-xs font-semibold text-gray-800">
+                  <div key={item.key} className="flex justify-between items-center py-1 border-b border-gray-50 last:border-b-0 text-xs gap-3">
+                    <span className="text-gray-400 font-medium uppercase text-[0.6rem] tracking-wider shrink-0">{item.label}</span>
+                    <span className="font-semibold text-gray-800 text-right">
                       {Array.isArray(item.val) ? item.val.join(', ') : item.val}
                     </span>
                   </div>
@@ -398,16 +398,16 @@ export default function ClientMemory({ client, section, hideShell = false }) {
 
         {/* Employment Information */}
         {employmentInfo.length > 0 && (
-          <div className="min-w-[240px] bg-gray-50/40 border border-gray-100/90 rounded-xl p-3 shrink-0 animate-fade-in flex flex-col justify-start">
+          <div className="flex-1 min-w-[280px] sm:min-w-[calc(50%-12px)] sm:max-w-[calc(50%-12px)] shrink-0 animate-fade-in flex flex-col justify-start pr-6 border-r border-gray-100 last:border-r-0 last:pr-0">
             <div>
-              <p className="text-[0.6rem] uppercase font-bold text-gray-400 tracking-wider mb-1.5">
+              <p className="text-[0.65rem] uppercase font-bold text-aag-primary tracking-wider mb-2 border-b border-aag-primary/20 pb-1">
                 Employment Information
               </p>
-              <div className="space-y-1">
+              <div className="space-y-2 pt-1">
                 {employmentInfo.map((item) => (
-                  <div key={item.key} className="text-xs">
-                    <span className="text-[0.55rem] text-gray-400 block leading-tight font-medium uppercase mb-0.5">{item.label}</span>
-                    <span className="text-xs font-semibold text-gray-800">
+                  <div key={item.key} className="flex justify-between items-center py-1 border-b border-gray-50 last:border-b-0 text-xs gap-3">
+                    <span className="text-gray-400 font-medium uppercase text-[0.6rem] tracking-wider shrink-0">{item.label}</span>
+                    <span className="font-semibold text-gray-800 text-right">
                       {Array.isArray(item.val) ? item.val.join(', ') : item.val}
                     </span>
                   </div>
@@ -419,16 +419,16 @@ export default function ClientMemory({ client, section, hideShell = false }) {
 
         {/* Family Information */}
         {familyInfo.length > 0 && (
-          <div className="min-w-[240px] bg-gray-50/40 border border-gray-100/90 rounded-xl p-3 shrink-0 animate-fade-in flex flex-col justify-start">
+          <div className="flex-1 min-w-[280px] sm:min-w-[calc(50%-12px)] sm:max-w-[calc(50%-12px)] shrink-0 animate-fade-in flex flex-col justify-start pr-6 border-r border-gray-100 last:border-r-0 last:pr-0">
             <div>
-              <p className="text-[0.6rem] uppercase font-bold text-gray-400 tracking-wider mb-1.5">
+              <p className="text-[0.65rem] uppercase font-bold text-aag-primary tracking-wider mb-2 border-b border-aag-primary/20 pb-1">
                 Family Information
               </p>
-              <div className="space-y-1">
+              <div className="space-y-2 pt-1">
                 {familyInfo.map((item) => (
-                  <div key={item.key} className="text-xs">
-                    <span className="text-[0.55rem] text-gray-400 block leading-tight font-medium uppercase mb-0.5">{item.label}</span>
-                    <span className="text-xs font-semibold text-gray-800">
+                  <div key={item.key} className="flex justify-between items-center py-1 border-b border-gray-50 last:border-b-0 text-xs gap-3">
+                    <span className="text-gray-400 font-medium uppercase text-[0.6rem] tracking-wider shrink-0">{item.label}</span>
+                    <span className="font-semibold text-gray-800 text-right">
                       {Array.isArray(item.val) ? item.val.join(', ') : item.val}
                     </span>
                   </div>
@@ -440,16 +440,16 @@ export default function ClientMemory({ client, section, hideShell = false }) {
 
         {/* Financial Information */}
         {financialInfo.length > 0 && (
-          <div className="min-w-[240px] bg-gray-50/40 border border-gray-100/90 rounded-xl p-3 shrink-0 animate-fade-in flex flex-col justify-start">
+          <div className="flex-1 min-w-[280px] sm:min-w-[calc(50%-12px)] sm:max-w-[calc(50%-12px)] shrink-0 animate-fade-in flex flex-col justify-start pr-6 border-r border-gray-100 last:border-r-0 last:pr-0">
             <div>
-              <p className="text-[0.6rem] uppercase font-bold text-gray-400 tracking-wider mb-1.5">
+              <p className="text-[0.65rem] uppercase font-bold text-aag-primary tracking-wider mb-2 border-b border-aag-primary/20 pb-1">
                 Financial Information
               </p>
-              <div className="space-y-1">
+              <div className="space-y-2 pt-1">
                 {financialInfo.map((item) => (
-                  <div key={item.key} className="text-xs">
-                    <span className="text-[0.55rem] text-gray-400 block leading-tight font-medium uppercase mb-0.5">{item.label}</span>
-                    <span className="text-xs font-semibold text-gray-800">
+                  <div key={item.key} className="flex justify-between items-center py-1 border-b border-gray-50 last:border-b-0 text-xs gap-3">
+                    <span className="text-gray-400 font-medium uppercase text-[0.6rem] tracking-wider shrink-0">{item.label}</span>
+                    <span className="font-semibold text-gray-800 text-right">
                       {Array.isArray(item.val) ? item.val.join(', ') : item.val}
                     </span>
                   </div>
@@ -461,16 +461,16 @@ export default function ClientMemory({ client, section, hideShell = false }) {
 
         {/* Communication Preferences */}
         {communicationInfo.length > 0 && (
-          <div className="min-w-[240px] bg-gray-50/40 border border-gray-100/90 rounded-xl p-3 shrink-0 animate-fade-in flex flex-col justify-start">
+          <div className="flex-1 min-w-[280px] sm:min-w-[calc(50%-12px)] sm:max-w-[calc(50%-12px)] shrink-0 animate-fade-in flex flex-col justify-start pr-6 border-r border-gray-100 last:border-r-0 last:pr-0">
             <div>
-              <p className="text-[0.6rem] uppercase font-bold text-gray-400 tracking-wider mb-1.5">
+              <p className="text-[0.65rem] uppercase font-bold text-aag-primary tracking-wider mb-2 border-b border-aag-primary/20 pb-1">
                 Communication Preferences
               </p>
-              <div className="space-y-1">
+              <div className="space-y-2 pt-1">
                 {communicationInfo.map((item) => (
-                  <div key={item.key} className="text-xs">
-                    <span className="text-[0.55rem] text-gray-400 block leading-tight font-medium uppercase mb-0.5">{item.label}</span>
-                    <span className="text-xs font-semibold text-gray-800">
+                  <div key={item.key} className="flex justify-between items-center py-1 border-b border-gray-50 last:border-b-0 text-xs gap-3">
+                    <span className="text-gray-400 font-medium uppercase text-[0.6rem] tracking-wider shrink-0">{item.label}</span>
+                    <span className="font-semibold text-gray-800 text-right">
                       {Array.isArray(item.val) ? item.val.join(', ') : item.val}
                     </span>
                   </div>
@@ -482,14 +482,14 @@ export default function ClientMemory({ client, section, hideShell = false }) {
 
         {/* Special Preferences */}
         {specialPreferencesInfo.length > 0 && (
-          <div className="min-w-[240px] bg-gray-50/40 border border-gray-100/90 rounded-xl p-3 shrink-0 animate-fade-in flex flex-col justify-start">
+          <div className="flex-1 min-w-[280px] sm:min-w-[calc(50%-12px)] sm:max-w-[calc(50%-12px)] shrink-0 animate-fade-in flex flex-col justify-start pr-6 border-r border-gray-100 last:border-r-0 last:pr-0">
             <div>
-              <p className="text-[0.6rem] uppercase font-bold text-gray-400 tracking-wider mb-1.5">
+              <p className="text-[0.65rem] uppercase font-bold text-aag-primary tracking-wider mb-2 border-b border-aag-primary/20 pb-1">
                 Special Preferences
               </p>
-              <ul className="space-y-1 list-disc pl-3">
+              <ul className="space-y-1.5 list-disc pl-3 pt-1">
                 {specialPreferencesInfo.map((item, idx) => (
-                  <li key={idx} className="text-xs font-semibold text-gray-800 leading-tight">
+                  <li key={idx} className="text-xs font-semibold text-gray-800 leading-relaxed">
                     {item}
                   </li>
                 ))}
@@ -504,7 +504,7 @@ export default function ClientMemory({ client, section, hideShell = false }) {
       return (
         <div className="flex flex-col flex-grow relative">
           {hasExtraFields && (
-            <div className="absolute right-4 top-2 text-[0.65rem] text-gray-400 animate-pulse bg-white/85 px-2 py-0.5 rounded-full pointer-events-none z-10 font-bold shadow-sm border border-gray-100">
+            <div className="absolute right-4 -top-[35px] text-[0.65rem] text-gray-500 animate-pulse bg-white px-2 py-0.5 rounded-full pointer-events-none z-10 font-bold shadow-sm border border-gray-100">
               Scroll →
             </div>
           )}

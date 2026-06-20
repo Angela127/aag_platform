@@ -26,7 +26,7 @@ const DEFAULT_AGENT_NOTIFICATIONS = [
   { id: 'a-notif-4', text: "🎂 Birthday today: Jasmin Lowery (Send a birthday greeting today!)", time: 'Just now', unread: true, type: 'birthday' },
   { id: 'a-notif-1', text: "John Tan's policy expires soon", time: '2h ago', unread: true, type: 'policy' },
   { id: 'a-notif-2', text: 'Sarah Lim not contacted in 45 days', time: '1d ago', unread: true, type: 'client' },
-  { id: 'a-notif-3', text: 'New partner deal from Prudential', time: '2d ago', unread: false, type: 'partner' },
+  { id: 'a-notif-3', text: 'New partner deal from Gleaneagles Hospital', time: '2d ago', unread: false, type: 'partner' },
 ];
 
 export default function Navbar() {

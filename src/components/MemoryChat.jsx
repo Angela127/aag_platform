@@ -337,7 +337,7 @@ export default function MemoryChat({ client }) {
       {/* Messages */}
       <div
         ref={messagesContainerRef}
-        className="flex-1 p-4 space-y-3 overflow-y-auto max-h-[340px] min-h-[200px]"
+        className="flex-1 p-4 space-y-3 overflow-y-auto max-h-[440px] min-h-[360px]"
       >
         {messages.map((msg, i) => (
           <div

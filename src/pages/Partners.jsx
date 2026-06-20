@@ -470,7 +470,7 @@ export default function Partners() {
           animation: 'spin 1s linear infinite',
         }} />
         <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-        <p style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>Connecting to Cloud Firestore...</p>
+        <p style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>Loading Partners...</p>
       </div>
     );
   }

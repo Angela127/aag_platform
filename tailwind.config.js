@@ -30,6 +30,7 @@ export default {
       animation: {
         'fade-in': 'fadeIn 0.3s ease-out both',
         'slide-up': 'slideUp 0.35s ease-out both',
+        'slide-down': 'slideDown 0.2s ease-out both',
         'scale-in': 'scaleIn 0.2s ease-out both',
         'pulse-slow': 'pulse 2.5s ease-in-out infinite',
       },
@@ -40,6 +41,10 @@ export default {
         },
         slideUp: {
           from: { opacity: '0', transform: 'translateY(16px)' },
+          to: { opacity: '1', transform: 'translateY(0)' },
+        },
+        slideDown: {
+          from: { opacity: '0', transform: 'translateY(-8px)' },
           to: { opacity: '1', transform: 'translateY(0)' },
         },
         scaleIn: {
