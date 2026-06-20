@@ -5,13 +5,14 @@ import MeetingSchedule from '../components/dashboard/MeetingSchedule.jsx';
 import TaskChecklist from '../components/dashboard/TaskChecklist.jsx';
 import SmartReminderPanel from '../components/dashboard/SmartReminderPanel.jsx';
 import KanbanBoard from '../components/dashboard/KanbanBoard.jsx';
+import AdvisorManagement from '../components/dashboard/AdvisorManagement.jsx';
 
 import { mockKanban, mockMeetings, mockPipeline } from '../lib/mockData.js';
 import { Users, TrendingUp, Calendar, FileText, CheckSquare, Sparkles } from 'lucide-react';
 import styles from './AgentDashboard.module.css';
 
 export default function AgentDashboard() {
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const [showBriefing, setShowBriefing] = useState(false);
   const [selectedDate, setSelectedDate] = useState('2026-06-20');
   
@@ -139,6 +140,8 @@ export default function AgentDashboard() {
           <SmartReminderPanel />
         </div>
       </div>
+
+      {role === 'manager' && <AdvisorManagement />}
 
       {/* Task Kanban Board */}
       <div className={styles.kanbanSection}>

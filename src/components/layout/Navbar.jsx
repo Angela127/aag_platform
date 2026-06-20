@@ -12,6 +12,15 @@ const AGENT_LINKS = [
   { to: '/reports',    label: 'Reports',   icon: BarChart3 },
 ];
 
+const MANAGER_LINKS = [
+  { to: '/dashboard',         label: 'Dashboard',   icon: LayoutDashboard },
+  { to: '/manager-dashboard', label: 'Message',     icon: LayoutDashboard },
+  { to: '/clients',           label: 'Clients',     icon: Users },
+  { to: '/training',          label: 'Training',    icon: BookOpen },
+  { to: '/partners',          label: 'Partners',    icon: Handshake },
+  { to: '/reports',           label: 'Reports',     icon: BarChart3 },
+];
+
 const DEFAULT_CUSTOMER_NOTIFICATIONS = [
   { id: 'c-notif-1', text: "Medical Insurance expires in 30 days", time: '1h ago', unread: true, type: 'policy' },
   { id: 'c-notif-2', text: "Annual Policy Review scheduled for June 25", time: '3h ago', unread: true, type: 'advisor' },
@@ -149,7 +158,7 @@ export default function Navbar() {
         {/* Center Nav Links */}
         {user && (
           <ul className={styles.navLinks}>
-            {role === 'agent' && AGENT_LINKS.map(({ to, label }) => (
+            {(role === 'agent' || role === 'manager') && (role === 'manager' ? MANAGER_LINKS : AGENT_LINKS).map(({ to, label }) => (
               <li key={to}>
                 <Link
                   to={to}
@@ -258,7 +267,7 @@ export default function Navbar() {
                   <div className={styles.dropdown}>
                     <div className={styles.dropdownHeader}>
                       <span>{displayName}</span>
-                      <span className={styles.dropdownSub}>{role === 'agent' ? 'Financial Advisor' : 'Customer'}</span>
+                      <span className={styles.dropdownSub}>{role === 'agent' ? 'Financial Advisor' : role === 'manager' ? 'Manager' : 'Customer'}</span>
                     </div>
                     <ul className={styles.menuList}>
                       <li>

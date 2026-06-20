@@ -11,12 +11,14 @@ import Clients from './pages/Clients.jsx';
 import Training from './pages/Training.jsx';
 import Partners from './pages/Partners.jsx';
 import Reports from './pages/Reports.jsx';
+import ManagerDashboard from './pages/ManagerDashboard.jsx';
 
-function ProtectedRoute({ children, allowedRole }) {
+function ProtectedRoute({ children, allowedRoles }) {
   const { user, role, loading } = useAuth();
   if (loading) return <div className="page-container" style={{ display:'flex', alignItems:'center', justifyContent:'center' }}><LoadingSpinner /></div>;
   if (!user) return <Navigate to="/login" replace />;
-  if (allowedRole && role !== allowedRole) return <Navigate to="/login" replace />;
+  const roles = Array.isArray(allowedRoles) ? allowedRoles : [allowedRoles];
+  if (allowedRoles && !roles.includes(role)) return <Navigate to="/login" replace />;
   return children;
 }
 
@@ -68,42 +70,47 @@ function AppRoutes() {
           : <LoginPage />
       } />
       <Route path="/dashboard" element={
-        <ProtectedRoute allowedRole="agent">
+        <ProtectedRoute allowedRoles={['agent', 'manager']}>
           <AppLayout><AgentDashboard /></AppLayout>
         </ProtectedRoute>
       } />
       <Route path="/clients" element={
-        <ProtectedRoute allowedRole="agent">
+        <ProtectedRoute allowedRoles={['agent', 'manager']}>
           <AppLayout><ClientManagement /></AppLayout>
         </ProtectedRoute>
       } />
       <Route path="/clients/:id" element={
-        <ProtectedRoute allowedRole="agent">
+        <ProtectedRoute allowedRoles={['agent', 'manager']}>
           <AppLayout><ClientDetail /></AppLayout>
           </ProtectedRoute>
       } />
       <Route path="/training" element={
-        <ProtectedRoute allowedRole="agent">
+        <ProtectedRoute allowedRoles={['agent', 'manager']}>
           <AppLayout><TrainingPage /></AppLayout>
         </ProtectedRoute>
       } />
       <Route path="/training" element={
-        <ProtectedRoute allowedRole="agent">
+        <ProtectedRoute allowedRoles={['agent', 'manager']}>
           <AppLayout><Training /></AppLayout>
         </ProtectedRoute>
       } />
       <Route path="/partners" element={
-        <ProtectedRoute allowedRole="agent">
+        <ProtectedRoute allowedRoles={['agent', 'manager']}>
           <AppLayout><Partners /></AppLayout>
         </ProtectedRoute>
       } />
       <Route path="/reports" element={
-        <ProtectedRoute allowedRole="agent">
+        <ProtectedRoute allowedRoles={['agent', 'manager']}>
           <AppLayout><Reports /></AppLayout>
         </ProtectedRoute>
       } />
+      <Route path="/manager-dashboard" element={
+        <ProtectedRoute allowedRoles="manager">
+          <AppLayout><ManagerDashboard /></AppLayout>
+        </ProtectedRoute>
+      } />
       <Route path="/customer-portal" element={
-        <ProtectedRoute allowedRole="customer">
+        <ProtectedRoute allowedRoles="customer">
           <AppLayout><CustomerPortal /></AppLayout>
         </ProtectedRoute>
       } />

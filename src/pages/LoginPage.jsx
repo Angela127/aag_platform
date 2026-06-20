@@ -21,8 +21,19 @@ export default function LoginPage() {
     setError('');
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      localStorage.setItem('aag_role', role);
-      navigate(role === 'customer' ? '/customer-portal' : '/dashboard');
+      
+      let finalRole = role;
+      const lowerEmail = email.toLowerCase();
+      if (lowerEmail === 'manager@gmail.com') {
+        finalRole = 'manager';
+      } else if (lowerEmail === 'customer@gmail.com') {
+        finalRole = 'customer';
+      } else if (lowerEmail === 'advisor@gmail.com') {
+        finalRole = 'agent';
+      }
+      
+      localStorage.setItem('aag_role', finalRole);
+      navigate(finalRole === 'customer' ? '/customer-portal' : '/dashboard');
     } catch (err) {
       const messages = {
         'auth/invalid-credential':    'Incorrect email or password.',
@@ -76,6 +87,13 @@ export default function LoginPage() {
             </button>
             <button
               type="button"
+              className={`${styles.roleBtn} ${role === 'manager' ? styles.roleBtnActive : ''}`}
+              onClick={() => setRole('manager')}
+            >
+              Manager
+            </button>
+            <button
+              type="button"
               className={`${styles.roleBtn} ${role === 'customer' ? styles.roleBtnActive : ''}`}
               onClick={() => setRole('customer')}
             >
@@ -85,11 +103,13 @@ export default function LoginPage() {
 
           <div className={styles.formHead}>
             <h2 className={styles.formTitle}>
-              {role === 'agent' ? 'Advisor Sign In' : 'Customer Sign In'}
+              {role === 'agent' ? 'Advisor Sign In' : role === 'manager' ? 'Manager Sign In' : 'Customer Sign In'}
             </h2>
             <p className={styles.formSub}>
               {role === 'agent'
                 ? 'Access your intelligence dashboard'
+                : role === 'manager'
+                ? 'Manage your team of advisors'
                 : 'View your financial portfolio'}
             </p>
           </div>

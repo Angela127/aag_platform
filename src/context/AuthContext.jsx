@@ -6,16 +6,32 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser]     = useState(null);
-  const [role, setRole]     = useState(null);   // 'agent' | 'customer'
+  const [role, setRole]     = useState(null);   // 'agent' | 'customer' | 'manager'
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (firebaseUser) => {
       if (firebaseUser) {
         setUser(firebaseUser);
-        // Role is stored in localStorage after login
-        const savedRole = localStorage.getItem('aag_role') || 'agent';
-        setRole(savedRole);
+        
+        // Auto-resolve role based on specific hardcoded accounts
+        let resolvedRole = localStorage.getItem('aag_role');
+        const email = firebaseUser.email?.toLowerCase();
+        
+        if (email === 'manager@gmail.com') {
+          resolvedRole = 'manager';
+        } else if (email === 'customer@gmail.com') {
+          resolvedRole = 'customer';
+        } else if (email === 'advisor@gmail.com') {
+          resolvedRole = 'agent';
+        }
+        
+        if (!resolvedRole) {
+          resolvedRole = 'agent';
+        }
+        
+        localStorage.setItem('aag_role', resolvedRole);
+        setRole(resolvedRole);
       } else {
         setUser(null);
         setRole(null);

@@ -340,3 +340,89 @@ export const mockPartnerActivity = [
   { id: 'pa3', referralId: 'ref4', time: '09:00 AM', date: '2026-06-19', text: 'Documents requested: Income statement and property valuation for Emily Chen.' },
   { id: 'pa4', referralId: 'ref3', time: '04:30 PM', date: '2026-06-19', text: 'Service completed: David Wong\'s retirement portfolio is active.' },
 ];
+
+// ── Manager Role: Mock Advisors & Messages ──────────────────────────
+
+export const mockAdvisors = [
+  {
+    id: 'adv-rajkumar',
+    name: 'Raj Kumar',
+    email: 'raj.kumar@aag.com',
+    phone: '+65 9111 2233',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop',
+    status: 'active',
+    teamSize: 4,
+    totalClients: 42,
+    designation: 'Senior Wealth Advisor',
+  },
+  {
+    id: 'adv-priyanair',
+    name: 'Priya Nair',
+    email: 'priya.nair@aag.com',
+    phone: '+65 9222 3344',
+    avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop',
+    status: 'active',
+    teamSize: 3,
+    totalClients: 38,
+    designation: 'Estate Planning Specialist',
+  },
+  {
+    id: 'adv-danieltan',
+    name: 'Daniel Tan',
+    email: 'daniel.tan@aag.com',
+    phone: '+65 9333 4455',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop',
+    status: 'away',
+    teamSize: 2,
+    totalClients: 27,
+    designation: 'Financial Consultant',
+  },
+  {
+    id: 'adv-ameliawong',
+    name: 'Amelia Wong',
+    email: 'amelia.wong@aag.com',
+    phone: '+65 9444 5566',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop',
+    status: 'active',
+    teamSize: 5,
+    totalClients: 51,
+    designation: 'Senior Risk Advisor',
+  },
+  {
+    id: 'adv-marcuslim',
+    name: 'Marcus Lim',
+    email: 'marcus.lim@aag.com',
+    phone: '+65 9555 6677',
+    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&h=100&fit=crop',
+    status: 'active',
+    teamSize: 3,
+    totalClients: 33,
+    designation: 'Retirement Planning Specialist',
+  },
+  {
+    id: 'adv-sarahchen',
+    name: 'Sarah Chen',
+    email: 'sarah.chen@aag.com',
+    phone: '+65 9666 7788',
+    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&h=100&fit=crop',
+    status: 'away',
+    teamSize: 2,
+    totalClients: 19,
+    designation: 'Junior Financial Advisor',
+  },
+];
+
+export const mockManagerMessages = {
+  'adv-rajkumar': [
+    { id: 'mm1', sender: { name: 'You', role: 'manager' }, text: 'Hi Raj, please review the Q2 performance report and share your feedback by EOD.', time: '09:15', createdAt: new Date('2026-06-20T09:15:00') },
+    { id: 'mm2', sender: { name: 'Raj Kumar', role: 'advisor' }, text: 'Sure, will do. I noticed the ILP portfolio returns are higher than expected — great news for the team!', time: '09:42', createdAt: new Date('2026-06-20T09:42:00') },
+    { id: 'mm3', sender: { name: 'You', role: 'manager' }, text: 'Here is the updated training module for the new compliance requirements: https://aag-training.com/compliance-2026', time: '10:05', createdAt: new Date('2026-06-20T10:05:00') },
+  ],
+  'adv-priyanair': [
+    { id: 'mm4', sender: { name: 'You', role: 'manager' }, text: 'Priya, the estate planning workshop is confirmed for next Thursday. Please prepare your presentation.', time: '11:30', createdAt: new Date('2026-06-19T11:30:00') },
+    { id: 'mm5', sender: { name: 'Priya Nair', role: 'advisor' }, text: 'Got it! I will also bring the updated trust documentation templates.', time: '11:45', createdAt: new Date('2026-06-19T11:45:00') },
+  ],
+  'adv-ameliawong': [
+    { id: 'mm6', sender: { name: 'You', role: 'manager' }, text: 'Amelia, congratulations on closing the Chen family account! Please check this resource on cross-selling strategies: https://aag-resources.com/cross-sell-guide', time: '14:00', createdAt: new Date('2026-06-18T14:00:00') },
+  ],
+};
