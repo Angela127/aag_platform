@@ -107,6 +107,7 @@ function AppRoutes() {
           <AppLayout><CustomerPortal /></AppLayout>
         </ProtectedRoute>
       } />
+      <Route path="/client-portal" element={<Navigate to="/customer-portal" replace />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

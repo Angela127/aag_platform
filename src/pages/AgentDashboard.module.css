@@ -1,24 +1,23 @@
-/* AgentDashboard.module.css */
-
 .page {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 28px 24px 48px;
+  padding: 24px 24px 48px;
 }
 
 .pageHeader {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   gap: 16px;
 }
 
 .pageTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 800;
   color: var(--text-primary);
   margin-bottom: 3px;
+  letter-spacing: -0.02em;
 }
 
 .pageDate {
@@ -26,21 +25,150 @@
   color: var(--text-muted);
 }
 
-.section {
-  margin-bottom: 20px;
+.briefingBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--white);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--dur-fast) var(--ease);
 }
 
-/* Calendar + Reminders: 60/40 split */
+.briefingBtn:hover {
+  background: var(--surface);
+  border-color: #d0ccc6;
+}
+
+.sparkleIcon {
+  color: var(--aag-gold);
+}
+
+/* Workspace sub-tabs */
+.tabNav {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--border-light);
+  padding-bottom: 2px;
+  margin-bottom: 24px;
+}
+
+.tabBtn {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 10px 20px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--dur-fast) var(--ease);
+  margin-bottom: -2px;
+  outline: none;
+}
+
+.tabBtn:hover {
+  color: var(--text-primary);
+}
+
+.tabBtnActive {
+  color: var(--aag-primary);
+  border-bottom-color: var(--aag-gold);
+}
+
+.tabContent {
+  animation: fadeIn var(--dur-base) var(--ease) both;
+}
+
+/* KPI row */
+.kpiRow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1024px) {
+  .kpiRow {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .kpiRow {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.kpiCard {
+  background: var(--surface-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+}
+
+.kpiCard:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.kpiIconWrap {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.kpiValue {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.1;
+}
+
+.kpiLabel {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* Calendar + Reminders Command Center: 65% / 35% Split */
 .midGrid {
   display: grid;
   grid-template-columns: 1fr 340px;
-  gap: 16px;
+  gap: 18px;
   align-items: start;
 }
 
-.midLeft { min-width: 0; }
-.midRight { min-width: 0; }
+.midLeft {
+  min-width: 0;
+}
+
+.midRight {
+  min-width: 0;
+}
 
 @media (max-width: 1024px) {
-  .midGrid { grid-template-columns: 1fr; }
+  .midGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kanbanSection {
+  margin-top: 24px;
 }
