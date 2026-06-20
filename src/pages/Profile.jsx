@@ -126,9 +126,12 @@ export default function Profile() {
     <div className={styles.page}>
       {/* Header */}
       <div className={styles.pageHeader}>
-        <div>
-          <h1 className={styles.pageTitle}>My Profile</h1>
-          <p className={styles.pageDate}>Manage your personal credentials, designation, and biography</p>
+        <div className={styles.headerLeft}>
+          <h1 className={styles.pageTitle}>
+            <User size={32} className={styles.titleIcon} />
+            My Profile
+          </h1>
+          <p className={styles.pageDate}>Manage your personal credentials, designation, location info, and biography.</p>
         </div>
       </div>
 

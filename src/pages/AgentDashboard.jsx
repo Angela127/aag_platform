@@ -7,7 +7,7 @@ import KanbanBoard from '../components/dashboard/KanbanBoard.jsx';
 import SectorNewsDrawer from '../components/dashboard/SectorNewsDrawer.jsx';
 
 import { mockKanban, mockMeetings, mockPipeline } from '../lib/mockData.js';
-import { Users, TrendingUp, Calendar, FileText, CheckSquare, Sparkles, Newspaper } from 'lucide-react';
+import { Users, TrendingUp, Calendar, FileText, CheckSquare, Sparkles, Newspaper, LayoutDashboard } from 'lucide-react';
 import styles from './AgentDashboard.module.css';
 
 export default function AgentDashboard() {
@@ -67,11 +67,16 @@ export default function AgentDashboard() {
 
       {/* Page Header greeting */}
       <div className={styles.pageHeader}>
-        <div>
-          <h1 className={styles.pageTitle}>{greeting}, {displayName}</h1>
-          <p className={styles.pageDate}>{today}</p>
+        <div className={styles.headerLeft}>
+          <h1 className={styles.pageTitle}>
+            <LayoutDashboard size={32} className={styles.titleIcon} />
+            {greeting}, {displayName}
+          </h1>
+          <p className={styles.pageDate}>
+            {today} · Monitor your smart reminders, daily meetings, client pipelines, and task lists.
+          </p>
         </div>
-        <div style={{ display: 'flex', gap: 12 }}>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
           <button
             className={styles.briefingBtn}
             onClick={() => setShowBriefing(true)}

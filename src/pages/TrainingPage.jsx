@@ -59,15 +59,13 @@ function TrainingPageInner() {
       {/* ── Page Header ── */}
       <div className={styles.pageHeader}>
         <div className={styles.headerLeft}>
-          <div className={styles.headerIcon}>
-            <GraduationCap size={22} style={{ color: 'white' }} />
-          </div>
-          <div>
-            <h1 className={styles.pageTitle}>Training & CPD</h1>
-            <p className={styles.pageSub}>
-              Professional development for {displayName}
-            </p>
-          </div>
+          <h1 className={styles.pageTitle}>
+            <GraduationCap size={32} className={styles.titleIcon} />
+            Training & CPD
+          </h1>
+          <p className={styles.pageSub}>
+            Professional development for {displayName}. Curate your learning journey, track CPD compliance hours, and earn professional credentials.
+          </p>
         </div>
         <div className={styles.headerRight}>
           <div className={styles.cpdPill}>

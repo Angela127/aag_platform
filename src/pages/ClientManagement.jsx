@@ -142,23 +142,24 @@ export default function ClientManagement() {
   return (
     <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
       {/* Page Header */}
-      <div className="mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-900">Client Management</h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Manage client relationships and monitor client health from Firestore
-            </p>
-          </div>
-          <button
-            id="add-client-btn"
-            onClick={() => setShowAddModal(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-aag-primary text-white text-sm font-medium hover:bg-aag-primary-dark transition-colors shadow-sm cursor-pointer"
-          >
-            <Plus size={16} />
-            Add Client
-          </button>
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 border-b border-gray-200 pb-6 mb-5">
+        <div className="max-w-4xl">
+          <h1 className="flex items-center gap-3 text-3xl sm:text-4xl font-bold text-aag-primary tracking-tight mb-1.5">
+            <Users size={32} className="text-aag-primary shrink-0" />
+            Client Management
+          </h1>
+          <p className="text-base text-gray-500">
+            Manage client relationships, monitor financial health scores, and process new client onboarding.
+          </p>
         </div>
+        <button
+          id="add-client-btn"
+          onClick={() => setShowAddModal(true)}
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-aag-primary text-white text-sm font-medium hover:bg-aag-primary-dark transition-colors shadow-sm cursor-pointer shrink-0"
+        >
+          <Plus size={16} />
+          Add Client
+        </button>
       </div>
 
       {error && (

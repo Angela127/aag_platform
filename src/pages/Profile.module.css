@@ -8,20 +8,37 @@
 }
 
 .pageHeader {
-  margin-bottom: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 24px;
+  margin-bottom: 20px;
+}
+
+.headerLeft {
+  max-width: 800px;
 }
 
 .pageTitle {
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 3px;
-  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--aag-primary);
+  letter-spacing: -0.025em;
+  margin-bottom: 6px;
+}
+
+.titleIcon {
+  color: var(--aag-primary);
+  flex-shrink: 0;
 }
 
 .pageDate {
-  font-size: 0.875rem;
-  color: var(--text-muted);
+  font-size: 1rem;
+  color: var(--text-secondary);
 }
 
 /* Two-column layout */

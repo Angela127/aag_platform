@@ -217,9 +217,14 @@ export default function ManagerDashboard() {
     <div className={styles.page}>
       {/* Page Header */}
       <div className={styles.pageHeader}>
-        <div>
-          <h1 className={styles.pageTitle}>{greeting}, {displayName}</h1>
-          <p className={styles.pageDate}>{today} · Advisor Messaging</p>
+        <div className={styles.headerLeft}>
+          <h1 className={styles.pageTitle}>
+            <MessageSquare size={32} className={styles.titleIcon} />
+            {greeting}, {displayName}
+          </h1>
+          <p className={styles.pageDate}>
+            {today} · Advisor messaging, real-time consultation, case discussion, and support.
+          </p>
         </div>
       </div>
 

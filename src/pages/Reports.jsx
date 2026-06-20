@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { db } from '../lib/firebase.js';
 import { doc, getDoc } from 'firebase/firestore';
 import { ADVISOR_REPORT_OVERRIDES } from '../lib/advisorReportOverrides.js';
+import { BarChart3 } from 'lucide-react';
 import styles from './Reports.module.css';
 import {
   monthlyRevenue, quarterlyRevenue, yearlyRevenue, productSales,
@@ -1062,8 +1063,9 @@ export default function Reports() {
     <div className={styles.page}>
       {/* ── Page Header ── */}
       <div className={styles.pageHeader}>
-        <div>
+        <div className={styles.headerLeft}>
           <h1 className={styles.pageTitle}>
+            <BarChart3 size={32} className={styles.titleIcon} />
             {selectedAdvisor ? `${selectedAdvisor.name}'s Performance Intelligence` : 'Advisor Performance Intelligence'}
           </h1>
           <p className={styles.pageSubtitle}>

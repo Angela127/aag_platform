@@ -12,45 +12,44 @@
 /* ── Page Header ─────────────────────────────────────────────── */
 .pageHeader {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 16px;
-  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 24px;
+  margin-bottom: 20px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 
 .headerLeft {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.headerIcon {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, var(--aag-primary), var(--aag-primary-dark));
-  border-radius: var(--radius-md);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(135,1,5,.25);
-  flex-shrink: 0;
+  max-width: 800px;
 }
 
 .pageTitle {
-  font-size: 1.625rem;
-  font-weight: 800;
-  color: var(--text-primary);
-  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--aag-primary);
+  letter-spacing: -0.025em;
+  margin-bottom: 6px;
+}
+
+.titleIcon {
+  color: var(--aag-primary);
+  flex-shrink: 0;
 }
 
 .pageSub {
-  font-size: 0.875rem;
-  color: var(--text-muted);
+  font-size: 1rem;
+  color: var(--text-secondary);
 }
 
 /* ── CPD Pill ─────────────────────────────────────────────────── */
-.headerRight {}
+.headerRight {
+  align-self: flex-start;
+}
 
 .cpdPill {
   display: flex;

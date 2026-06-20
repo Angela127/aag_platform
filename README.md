@@ -90,14 +90,9 @@ The **AAG Advisor Intelligence Platform** addresses these three pillars by servi
 
 ## 🏗️ System Architecture
 
-```mermaid
-graph TD
-  User[Financial Advisor] -->|HTTP / JS| Frontend[React SPA - Tailwind CSS]
-  Frontend -->|API Proxy: /api/*| Backend[Node.js Production Server]
-  Backend -->|Application Default Credentials| VertexAI[Google Vertex AI - Gemini 2.5 Flash]
-  Backend -->|SDK Query| CNARSS[CNA Business RSS Feed]
-  Frontend -->|Client Queries| Firestore[Google Firestore database]
-```
+<p align="center">
+  <img src="public/Architecture%20Diagram.png" alt="System Architecture Diagram" width="800" />
+</p>
 
 ---
 
