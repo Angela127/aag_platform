@@ -83,8 +83,8 @@ The **AAG Advisor Intelligence Platform** addresses these three pillars by servi
 | **Management Dashboard** | Broad oversight cockpit enabling managers to assign training, monitor team-wide CPD completion, and review aggregate referral volume. |
 
 ### SDG Alignment
-* **SDG 8: Decent Work and Economic Growth**: Modernizes financial services by boosting advisor productivity and equipping them to offer premium, client-centric guidance.
 * **SDG 9: Industry, Innovation, and Infrastructure**: Drives technological transformation within traditional financial advisory sectors.
+* **SDG 17: Partnerships for the Goals**: Enhances the financial advisory ecosystem by enabling seamless tracking, referrals, and collaboration with external professional partners.
 
 ---
 
