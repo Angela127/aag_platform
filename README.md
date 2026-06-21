@@ -10,7 +10,7 @@
 
 <p align="center">
   <b>🚀 <a href="https://aag-platform-811965513037.asia-southeast1.run.app">Live Demo (Deployed Link)</a></b> •
-  <b>🎥 <a href="https://youtu.be/zQF-Hpw2YjU?si=5GGOg7V_uwC2f3Ya">Watch our Pitching Video (YouTube)</a></b>
+  <b>🎥 <a href="https://youtu.be/qSJBmJ2PFH8">Watch our Pitching Video (YouTube)</a></b>
 </p>
 
 <div align="center">
@@ -108,9 +108,9 @@ The **AAG Advisor Intelligence Platform** addresses these three pillars by servi
 
 ## 🧩 Challenges and Approaches
 
-### 1. CORS Restrictions on Live Feeds
-* **Challenge**: Direct browser fetches to the CNA RSS XML feed were blocked by browser CORS security policies.
-* **Approach**: Built a secure server-side proxy route `/api/news` in our production Node.js server. The backend retrieves the XML, parses it into lightweight JSON, applies categorizations (e.g., Real Estate, CPF & Annuities), and feeds it to the frontend.
+### 1. Incremental AI Memory Synthesis (Context Window Fatigue)
+* **Challenge**: Passing full conversation histories or unstructured notes into Vertex AI/Gemini for context during advisor messaging sessions causes rapid "context window fatigue," slow response times, and high token costs as client relationships grow over years.
+* **Approach**: Developed an incremental synthesis system in Firestore. Instead of passing historical logs directly, the system passes only the existing `memorySummary` alongside new notes to Gemini, prompting the model to generate structured JSON updates to update the client's timeline entries. This keeps token usage constant and keeps response latency low regardless of client relationship duration.
 
 ### 2. Keyless AI Authorization (ADC)
 * **Challenge**: Bundling or hardcoding private key service account JSONs (`google.json`) inside Docker images is a severe security vulnerability.
@@ -124,19 +124,50 @@ The **AAG Advisor Intelligence Platform** addresses these three pillars by servi
 
 ## 💻 Usage Instructions
 
-### Local Development
+### 1. Prerequisites
+Ensure you have the following installed:
+* **Node.js**: Version 18.0.0 or higher.
+* **Google Cloud SDK** (Optional): For Cloud Run deployment commands.
 
-1. **Prerequisites**: Ensure Node.js (v18+) is installed.
+---
+
+### 2. Installation & Setup
+
+1. **Clone the Repository**:
+   ```bash
+   git clone <repository-url>
+   cd aag_platform
+   ```
+
 2. **Install Dependencies**:
    ```bash
    npm install
    ```
-3. **Environment Setup**: Create a `.env` file at the root or configure your Vertex AI credentials inside `src/credentials/google.json`.
-4. **Run Server**:
+
+3. **Configure Environment Variables**:
+   Create a `.env` file in the root directory:
    ```bash
-   npm run dev
+   # Copy sample env
+   cp .env.example .env
    ```
-   Open `http://localhost:5173` to explore the dashboard.
+   Open the `.env` file and populate it with your Google Gemini API Key:
+   ```env
+   VITE_GEMINI_API_KEY=your_gemini_api_key_here
+   GEMINI_MODEL=gemini-2.5-flash
+   ```
+   *(Note: The Firebase configuration is already pre-configured inside `src/credentials/firebase.js` and connects automatically to our Firestore database.)*
+
+---
+
+### 3. Running Locally
+
+#### Development Mode (With Hot Reloading)
+To start the React development server:
+```bash
+npm run dev
+```
+* **Local URL**: `http://localhost:5173`
+* The dev server automatically handles hot reloading and communicates with Firestore.
 ---
 
 ## 🌍 Social Impact
