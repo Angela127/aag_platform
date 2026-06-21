@@ -10,7 +10,7 @@
 
 <p align="center">
   <b>🚀 <a href="https://aag-platform-811965513037.asia-southeast1.run.app">Live Demo (Deployed Link)</a></b> •
-  <b>🎥 <a href="https://youtu.be/qSJBmJ2PFH8">Watch our Pitching Video (YouTube)</a></b>
+  <b>🎥 <a href="https://youtu.be/MvFICTfo8hA">Watch our Pitching Video (YouTube)</a></b>
 </p>
 
 <div align="center">
